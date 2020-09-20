@@ -1,19 +1,16 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const upload = require('../config/multer');
-
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
 const Product = require('../models/product');
 
 const router = express.Router();
 
-router.get('/product-list', (req, res, next) => {
+router.get('/', (req, res, next) => {
     Product.find({}, (error, products) => {
         if (error) {
-            res.json({ message: 'Could not find products' });
+            console.log(error);
         } else {
-            res.send(products);
+            res.json({ message: 'Found products.', products })
         }
     });
 })
@@ -31,7 +28,7 @@ router.post('/', upload.fields([{ name: 'files' }]), (req, res, next) => {
         if (error) {
             return console.error.bind(error);
         } else {
-            res.json({ message: 'Successfully saved product.', title: req.body.title, category: req.body.category, description: req.body.description, price: req.body.price, files: req.files['files'] })
+            res.json({ message: 'Successfully saved product.', product })
         }
     })
 })

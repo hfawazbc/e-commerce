@@ -16,8 +16,18 @@ const userSchema = new Schema({
         required: true
     },
     cart: {
-        type: [Object]
-    }
+        type: [{
+            item: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product',
+            },
+            quantity: Number
+        }]
+    },
+    purchased: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+    }]
 })
 
 const User = mongoose.model('User', userSchema);

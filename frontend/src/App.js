@@ -1,56 +1,48 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
-
 import './styles/app.css';
-
-import PrivateRoute from './components/PrivateRoute';
-import SessionRoute from './components/SessionRoute';
-
 import Register from './components/Register';
 import SignIn from './components/SignIn';
 import SignOut from './components/SignOut';
-
-import Navigation from './components/Navigation';
+import Error from './components/Error';
+import PaymentSuccessful from './components/PaymentSuccessful';
+import PaymentCancelled from './components/PaymentCancelled';
+import NavBar from './components/NavBar';
 import Cart from './components/Cart';
-import PostItem from './components/PostItem';
+import Post from './components/Post';
 import ItemList from './components/ItemList';
 
-import Error from './components/Error';
-import Success from './components/Success';
-import Cancel from './components/Cancel';
-
 export default function App() {
-  const [clickedAdd, setClickedAdd] = useState(false);
-  const [clickedRemove, setClickedRemove] = useState(false);
-  const [clickedQuantity, setClickedQuantity] = useState(false);
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const [guestCart, setGuestCart] = useState(cart);
+  const [userCart, setUserCart] = useState([]);
 
   return (
     <div>
-      <Switch >
-          <PrivateRoute exact path="/post-item" component={ PostItem } />
-          <PrivateRoute exact path="/sign-out" component={ SignOut } />
+        <Switch>
+          <Route exact path="/register" component={Register}/>
+          <Route exact path="/sign-in" component={SignIn}/>
+          <Route exact path="/sign-out" component={SignOut}/>
+          <Route exact path="/post" component={Post}/>
 
-          <SessionRoute exact path="/register" component={ Register }/>
-          <SessionRoute exact path="/sign-in" component={ SignIn }/>
-
-          <Route exact path="/success" component={ Success } />
-          <Route exact path="/cancel" component={ Cancel } />
-
-          <Route exact path="/" render={props =>
+          <Route exact path="/" render={(props) =>
             <div>
-              <Navigation {...props} clickedAdd={clickedAdd} setClickedAdd={setClickedAdd}/>
-              <ItemList {...props} setClickedAdd={setClickedAdd} />
+              <NavBar {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+              <ItemList {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
             </div>
-          } />
+          }/>
 
-          <Route exact path="/cart" render={props => 
+          <Route exact path="/cart" render={(props) => 
             <div>
-              <Cart {...props} clickedRemove={clickedRemove} setClickedRemove={setClickedRemove} clickedQuantity={clickedQuantity} setClickedQuantity={setClickedQuantity} />
+              <Cart {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
             </div>
-          } />
+          }/>
 
-          <Route path="*" component={ Error } />
-      </Switch>
+          <Route exact path="/success" component={PaymentSuccessful}/>
+          <Route exact path="/cancel" component={PaymentCancelled}/>
+
+          <Route path="*" component={Error}/>
+        </Switch>
     </div>
   );
 }

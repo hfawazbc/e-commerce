@@ -1,42 +1,45 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import CartRemoveItem from './CartRemoveItem';
 
-export default function CartItem({ item, setClickedRemove, setClickedQuantity }) {
-    const [quantity, setQuantity] = useState(item.quantity);
+export default function CartItem({ cartItem, setUserCart, setGuestCart}) {
+    const { findingUser, user } = useContext(UserContext);
 
-    const itemQuantity = (e) => {
-        if (e.target.value >= 1) {
-            let cart = JSON.parse(localStorage.getItem('cart'));
+    let page;
 
-            let i = 0;
-            while (i < cart.length) {
-                if (cart[i].id === item.id) {
-                    cart[i].quantity = e.target.value;
-                }
+    if (!findingUser && user) {
+        page = (
+            <div>
+                <p>{cartItem.item.title}</p>
+                <p>{cartItem.item.price}</p>
+                <p>Subtotal 000</p>
 
-                i++;
-            }
+                {/* <label htmlFor="quantity">Quantity</label>
+                <input id="quantity" type="number" value={quantity} onChange={() => console.log('Changed quantity.')}/> */}
 
-            localStorage.setItem('cart', JSON.stringify(cart));
+                <CartRemoveItem cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart} />
+            </div>
+        )
+    }
 
-            setQuantity(e.target.value);
+    if (!findingUser && !user) {
+        page = (
+            <div>
+                <p>{cartItem.title}</p>
+                <p>{cartItem.price}</p>
+                <p>Subtotal 000</p>
 
-            setClickedQuantity(true);
-        } else {
-            setQuantity(1);
-        }
+                {/* <label htmlFor="quantity">Quantity</label>
+                <input id="quantity" type="number" value={quantity} onChange={() => console.log('Changed quantity.')}/> */}
+
+                <CartRemoveItem cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart} />
+            </div>
+        )
     }
     
     return (
         <div>
-            <p>{item.title}</p>
-            <p>{item.price}</p>
-            <p>Subtotal: {item.price * quantity}</p>
-
-            <label htmlFor="quantity">Quantity</label>
-            <input id="quantity" type="number" value={quantity} onChange={(e) => itemQuantity(e)} />
-
-            <CartRemoveItem item={item} setClickedRemove={setClickedRemove} />
+            { page }
         </div>
     )
 }

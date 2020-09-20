@@ -1,48 +1,88 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
 import CartItem from './CartItem';
+import Checkout from './Checkout';
+import Loading from './Loading';
 
-export default function Cart({ clickedRemove, setClickedRemove, clickedQuantity, setClickedQuantity }) {
-    useEffect(() => {    
-        if (clickedRemove === true) {
-            setClickedRemove(false);
-        }
-    }, [clickedRemove, setClickedRemove])
+export default function Cart({ userCart, setUserCart, guestCart, setGuestCart }) {
+    const { user, findingUser } = useContext(UserContext);
 
-    useEffect(() => {    
-        if (clickedQuantity === true) {
-            setClickedQuantity(false);
-        }
-    }, [clickedQuantity, setClickedQuantity])
-
-    const [total, setTotal] = useState(0);
-
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
+    const [findingCart, setFindingCart] = useState(true);
+    
     useEffect(() => {
-        let sum = 0;
+        if (findingUser === false && user === true) {
+            const fetchCart = async () => {
+                try {
+                    const response = await fetch('http://localhost:5000/users/user/cart', {
+                        method: 'GET',
+                        credentials: 'include'
+                    })
+        
+                    if (findingCart === true) {
+                        const data = await response.json();
 
-        if (cart.length === 0) {
-            setTotal(0);
-        } else {
-            let i = 0;
-            while (i < cart.length) {
-                sum = sum + cart[i].price * cart[i].quantity;
-        
-                setTotal(sum);
-        
-                i++;
+                        setUserCart(data.user.cart);
+                    }
+
+                    setFindingCart(false);
+                } catch (error) {
+                    console.log(error);
+                }
             }
+
+            fetchCart();
         }
-    }, [cart])
+
+    }, [findingUser, user, findingCart, setUserCart])
+
+    let page;
+    
+    if (findingUser === false && user === true) {
+        if (findingCart === false) {
+            page = (
+                <div>
+                    {userCart.map(cartItem => {
+                        return <CartItem key={cartItem._id} cartItem={cartItem} setUserCart={ setUserCart }/>
+                    })}
+
+                    <div>
+                        {userCart.length > 0 ? <div><h1>Total: 000</h1><Link to="/">Return to home page</Link><Checkout/></div> : <div><h1>Your cart is empty.</h1><Link to="/">Return to home page</Link></div>}
+                    </div>
+                </div>
+            )
+        } 
+
+        if (findingCart === true) {
+            page = (
+                <Loading/>
+            )
+        }
+    }
+
+    if (findingUser === false && user === false) {
+        page = (
+            <div>
+                {guestCart.map(cartItem => {
+                    return <CartItem key={cartItem._id} cartItem={cartItem} setGuestCart={setGuestCart}/>
+                })}
+
+                <div>
+                    {guestCart.length > 0 ? <div><h1>Total 000</h1><Link to="/">Return to home page</Link><Checkout/></div> : <div><h1>Your cart is empty.</h1><Link to="/">Return to home page</Link></div>}
+                </div>
+            </div>
+        )
+    }
+
+    if (findingUser === true && user === false) {
+        page = (
+            <Loading/>
+        )
+    }
 
     return (
         <div>
-            {cart.map(item => {
-                return <CartItem key={item.id} item={item} setClickedRemove={setClickedRemove} setClickedQuantity={setClickedQuantity} />
-            })}
-            <div>
-                {total > 0 ? <h3>Total {total}</h3> : <h3>Cart is empty.</h3>}
-            </div>
+            { page }
         </div>
     )
 }

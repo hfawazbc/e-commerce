@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
+import { UserContext } from '../contexts/UserContext';
+import Loading from './Loading';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-export default function CheckoutOptions() {
-    const handleGuestCheckout = async (e) => {
+export default function Checkout() {
+    const { user, findingUser } = useContext(UserContext);
+
+    const handleCheckout = async (e) => {
         e.preventDefault();
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -30,7 +35,7 @@ export default function CheckoutOptions() {
                 });
 
                 if (result.error) {
-                        console.log(result.error.message);
+                    console.log(result.error.message);
                 }
             } catch (error) {
                 console.log(error);
@@ -40,19 +45,37 @@ export default function CheckoutOptions() {
         fetchCheckoutSession();
     }
 
-    const handleUserCheckout = (e) => {
+    let page;
 
+    if (findingUser === false && user === true) {
+        page = (
+            <button role="link" onClick={(e) => handleCheckout(e)}>
+                Checkout
+            </button>
+        )
+    }
+
+    if (findingUser === false && user === false) {
+        page = (
+            <div>
+                <button role="link" onClick={(e) => handleCheckout(e)}>
+                    Check out as guest
+                </button>
+
+                <Link to="/sign-in">Sign in to check out</Link>
+            </div>
+        )
+    }
+
+    if (findingUser === true && user === false) {
+        page = (
+            <Loading/>
+        )
     }
 
     return (
         <div>
-            <button role="link" onClick={(e) => handleUserCheckout(e)}>
-                Sign in to checkout
-            </button>
-
-            <button role="link" onClick={(e) => handleGuestCheckout(e)}>
-                Checkout as guest
-            </button>
+            { page }
         </div>
     )
 }

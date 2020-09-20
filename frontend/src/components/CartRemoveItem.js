@@ -1,36 +1,69 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
-export default function CartRemoveItem({ item, setClickedRemove }) {
-    const handleRequest = (e) => {
-        e.preventDefault();
+export default function CartRemoveItem({ cartItem, setUserCart, setGuestCart }) {
+    const { user, findingUser } = useContext(UserContext);
 
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let count = localStorage.getItem('count');
+    let page;
 
-        let i = 0;
-        let found = false;
-        while (i < cart.length && found !== true) {
-            if (cart[i].id === item.id) {
-                found = true;
-                let updatedCount = +count - 1;
-                localStorage.setItem('count', updatedCount);
+    if (findingUser === false && user === true) {
+        const handleClick = (e) => {
+            e.preventDefault();
+
+            const fetchCart = async () => {
+                try {
+                    const response = await fetch('http://localhost:5000/users/user/cart/remove-item', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            itemId: cartItem.item
+                        }),
+                        credentials: 'include'
+                    })
+    
+                    const data = await response.json();
+                    
+                    setUserCart(data.user.cart);
+                } catch (error) {
+                    console.log(error);
+                }
             }
 
-            i++;
+            fetchCart();
         }
 
-        let updatedCart = cart.filter(cartItem => cartItem.id !== item.id);
+        page = (
+            <div>
+                <button onClick={(e) => handleClick(e)}>Remove from cart</button>
+            </div>
+        )
+    }
 
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
+    if (findingUser === false && user === false) {
+        const handleRequest = (e) => {
+            e.preventDefault();
+    
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+            let newCart = cart.filter(item => item._id !== cartItem._id);
+    
+            localStorage.setItem('cart', JSON.stringify(newCart));
+    
+            setGuestCart(newCart);
+        }
 
-        alert("Removed item from cart.")
-
-        setClickedRemove(true);
+        page = (
+            <div>
+                <button onClick={(e) => handleRequest(e)}>Remove from cart</button>
+            </div>
+        )
     }
 
     return (
         <div>
-            <button onClick={(e) => handleRequest(e)}>Remove from cart</button>
+            { page }
         </div>
     )
 }
