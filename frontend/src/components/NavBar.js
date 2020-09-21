@@ -1,30 +1,24 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import '../styles/navBar.css';
+import shoppingCart from '../icons/shopping-cart.png';
 import { UserContext } from '../contexts/UserContext';
 import Loading from './Loading';
 
-import shoppingCart from '../icons/shopping-cart.png';
-
 export default function NavBar({ userCart, setUserCart, guestCart, setGuestCart }) {
-    const { findingUser, user } = useContext(UserContext);
-    const [findingCart, setFindingCart] = useState(true);
+    const { isUser, loading } = useContext(UserContext);
 
     useEffect(() => {
-        if (findingUser === false && user === true) {
+        if (!loading && isUser) {
             const fetchCart = async () => {
                 try {
                     const response = await fetch('http://localhost:5000/users/user/cart', {
                         method: 'GET',
                         credentials: 'include'
                     })
+                
+                    const data = await response.json();
 
-                    if (findingCart) {
-                        const data = await response.json();
-
-                        setUserCart(data.user.cart);                    
-                    }
-
-                    setFindingCart(false);
+                    setUserCart(data.user.cart);
                 } catch (error) {
                     console.log(error);
                 }
@@ -33,62 +27,51 @@ export default function NavBar({ userCart, setUserCart, guestCart, setGuestCart 
             fetchCart();
         }
 
-    }, [findingUser, user, findingCart, setUserCart])
+    }, [loading, isUser, setUserCart])
 
-    let page;
+    let cart = [];
+    let link = null;
 
-    if (!findingUser && user) {
-        if (!findingCart) {
-            page = (
-                <div className="user-navbar-container">
-                    <h3>E-commerce</h3>
-                    <div>
-                        <a className="navbar-link" href="/sign-out">Sign out</a>
-                    </div>
-                    <div>
-                        <a className="navbar-link" href="/cart" className="cart-container">
-                            <img className="cart-image" src={shoppingCart} alt=""/>
-                            <p className="cart-count">{userCart.length}</p>
-                        </a>
-                    </div>
-                </div>
-            )
-        } else {
-            page = (
-                <Loading/>
-            )
-        }
-    }
+    if (isUser) {
+        cart = userCart;
 
-    if (!findingUser && !user) {
-        page = (
-            <div className="guest-navbar-container">
-                <h3>E-commerce</h3>
-                <div>
-                    <a className="navbar-link" href="/register">Register</a>
-                </div>
-                <div>
-                    <a className="navbar-link" href="/sign-in">Sign in</a>
-                </div>
-                <div>
-                    <a className="navbar-link" href="/cart" className="cart-container">
-                        <img className="cart-image" src={shoppingCart} alt=""/>
-                        <p className="cart-count">{guestCart.length}</p>
-                    </a>
-                </div>
+        link = (
+            <div>
+                <a className="navbar-link" href="/sign-out">Sign out</a>
             </div>
         )
     }
 
-    if (findingUser && !user) {
-        page = (
-            <Loading/>
+    if (!isUser) {
+        cart = guestCart;
+
+        link = (
+            <div>
+               <a className="navbar-link" href="/sign-in">Sign in</a> | <a className="navbar-link" href="/register">Register</a>
+            </div>
         )
     }
 
-    return (
-        <div>
-            { page }
-        </div>
-    )
+    if (loading) {
+        return (
+            <Loading/>
+        )
+    } 
+    
+    if (!loading) {
+        return (
+            <div>
+                <div className="user-navbar-container">
+                    <a className="navbar-link" href="/"><h3>E-commerce</h3></a>
+                    { link }
+                    <div>
+                        <a className="navbar-cart-container" href="/cart" >
+                            <img className="navbar-cart-image" src={shoppingCart} alt=""/>
+                            <p className="navbar-cart-count">{cart.length}</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 }

@@ -7,3 +7,12 @@
 .item-detail {
     margin-bottom: 10px;
 }
+
+.add-btn {
+    border: none;
+    
+    padding: 5px;
+    background-color: #FFC107;
+
+    cursor: pointer;
+}

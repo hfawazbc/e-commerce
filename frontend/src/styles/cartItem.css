@@ -1,0 +1,25 @@
+.cart-item-container {
+    display: grid;
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+    background-color: white;
+
+    padding: 10px;
+}
+
+.cart-item-detail {
+    margin-bottom: 10px;
+}
+
+.remove-btn {
+    border: none;
+    
+    background-color: #F44336;
+
+    padding: 5px;
+
+    cursor: pointer;
+}

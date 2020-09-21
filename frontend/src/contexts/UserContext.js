@@ -3,43 +3,43 @@ import React, { createContext, useState, useEffect } from 'react';
 export const UserContext = createContext();
 
 export default function UserContextProvider({ children }) {
-    const [user, setUser] = useState(false);
-    const [findingUser, setFindingUser] = useState(true);
+    const [isUser, setIsUser] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const abortController = new AbortController();
 
-        const fetchUser = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/users/user', {
-                    method: 'GET',
-                    credentials: 'include',
-                    signal: abortController.signal
-                });
-                
-                if (findingUser === true) {
-                    const data = await response.json();
+        if (loading) {
+            const fetchUser = async () => {
+                try {
+                    const response = await fetch('http://localhost:5000/users/user', {
+                        method: 'GET',
+                        credentials: 'include',
+                        signal: abortController.signal
+                    });
 
-                    setUser(data.user.authenticated);
-                }
-                
-                setFindingUser(false);
-            } catch (error) {
-                if (!abortController.signal.aborted) {
-                    console.log(error);
+                    const data = await response.json();
+    
+                    setIsUser(data.user.authenticated);
+
+                    setLoading(false);
+                } catch (error) {
+                    if (!abortController.signal.aborted) {
+                        console.log(error);
+                    }
                 }
             }
+    
+            fetchUser();
         }
-
-        fetchUser();
 
         return () => {
             abortController.abort();
         }
-    }, [findingUser])
+    }, [loading])
 
     return (
-        <UserContext.Provider value={{ user, setUser, findingUser, setFindingUser }}>
+        <UserContext.Provider value={{ isUser, setIsUser, loading, setLoading }}>
             { children }
         </UserContext.Provider>
     )

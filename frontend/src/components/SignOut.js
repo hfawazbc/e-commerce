@@ -7,9 +7,9 @@ export default function SignOut() {
     const [authenticated, setAuthenticated] = useState(true);
     const [foundError, setFoundError] = useState(false);
 
-    const { user, setUser, findingUser } = useContext(UserContext);
+    const { isUser, setIsUser, loading } = useContext(UserContext);
 
-    const handleRequest = (e) => {
+    const handleClick = (e) => {
         e.preventDefault();
 
         const fetchSignOut = async () => {
@@ -23,7 +23,7 @@ export default function SignOut() {
 
                 setAuthenticated(data.user.authenticated);
 
-                setUser(data.user.authenticated);
+                setIsUser(data.user.authenticated);
             } catch (error) {
                 setFoundError(true);
 
@@ -34,34 +34,26 @@ export default function SignOut() {
         fetchSignOut();
     }
 
-    let page;
+    if (loading) {
+        return (
+            <Loading/>
+        )
+    }
 
-    if (findingUser === false && user === true) {
-        page = (
+    if (!loading && !isUser) {
+        return (
+            <Redirect to="/"/>
+        )
+    }
+
+    if (!loading && isUser) {
+        return (
             <div>
-                <button onClick={(e) => handleRequest(e)}>Sign out</button>
+                <button onClick={(e) => handleClick(e)}>Sign out</button>
 
                 <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
                 <Route render={ () => { if ((foundError === false) && (authenticated === false)) return <Redirect to="/sign-in"/> } }/>
             </div>
         )
     }
-    
-    if (findingUser === false && user === false) {
-        page = (
-            <Redirect to="/"/>
-        )
-    }
-
-    if (findingUser === true && user === false) {
-        page = (
-            <Loading/>
-        )
-    }
-
-    return (
-        <div>
-            { page }
-        </div>
-    )
 }

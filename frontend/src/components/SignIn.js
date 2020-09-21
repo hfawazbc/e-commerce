@@ -11,7 +11,7 @@ export default function SignIn() {
     const [authenticated, setAuthenticated] = useState(false);
     const [foundError, setFoundError] = useState(false);
 
-    const { user, setUser, findingUser } = useContext(UserContext);
+    const { isUser, setIsUser, loading } = useContext(UserContext);
     const { setBodyColor } = useContext(BodyContext);
 
     useEffect(() => {
@@ -39,7 +39,7 @@ export default function SignIn() {
 
                 setAuthenticated(data.user.authenticated);
 
-                setUser(data.user.authenticated);
+                setIsUser(data.user.authenticated);
             } catch (error) {
                 setFoundError(true);
                 console.log(error);
@@ -49,47 +49,41 @@ export default function SignIn() {
         fetchSignIn();
     }
 
-    let page;
-
-    if (findingUser === false && user === false) {
-        page = (
-            <div className="main-container">
-                <h1 className="main-header">Sign in</h1>
-                <form className="form-container" onSubmit={(e) => handleSubmit(e)}>
-                    <div className="field-container">
-                        <label className="field" htmlFor="email">Email</label>
-                        <input className="field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                    </div>
-                    <div className="field-container">
-                        <label className="field" htmlFor="password">Password</label>
-                        <input className="field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    </div>
-                    <button className="submit-btn" type="submit">Sign in</button>
-                </form>
-
-                <div className="link-container">Don't have an account? <a className="link" href="/register">Register</a></div>
-                
-                <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
-                <Route render={ () => { if ((foundError === false) && (authenticated === true)) return <Redirect to="/"/> } }/>
-            </div>
-        )
-    }
-
-    if (findingUser === false && user === true) {
-        page = (
-            <Redirect to="/"/>
-        )
-    }
-
-    if (findingUser === true && user === false) {
-        page = (
+    if (loading) {
+        return (
             <Loading/>
         )
     }
 
-    return (
-        <div style={{ width: '30%', margin: 'auto' }}>
-            { page }
-        </div>
-    )
+    if (!loading && isUser) {
+        return (
+            <Redirect to="/"/>
+        )
+    }
+
+    if (!loading && !isUser) {
+        return (
+            <div style={{ width: '30%', margin: 'auto' }}>
+                <div className="main-container">
+                    <h1 className="main-header">Sign in</h1>
+                    <form className="form-container" onSubmit={(e) => handleSubmit(e)}>
+                        <div className="field-container">
+                            <label className="field" htmlFor="email">Email</label>
+                            <input className="field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        </div>
+                        <div className="field-container">
+                            <label className="field" htmlFor="password">Password</label>
+                            <input className="field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        </div>
+                        <button className="submit-btn" type="submit">Sign in</button>
+                    </form>
+
+                    <div className="link-container">Don't have an account? <a className="link" href="/register">Register</a></div>
+                    
+                    <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
+                    <Route render={ () => { if ((foundError === false) && (authenticated === true)) return <Redirect to="/"/> } }/>
+                </div>
+            </div>
+        )
+    }
 }

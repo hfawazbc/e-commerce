@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/itemList.css';
 import Item from './Item';
-import Loading from './Loading';
 
 export default function ItemList({ userCart, setUserCart, guestCart, setGuestCart }) {
     const [products, setProducts] = useState([]);
-    const [findingProducts, setFindingProducts] = useState(true);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -18,13 +16,9 @@ export default function ItemList({ userCart, setUserCart, guestCart, setGuestCar
                     signal: abortController.signal
                 })
 
-                if (findingProducts) {
-                    const data = await response.json();
+                const data = await response.json();
 
-                    setProducts(data.products);
-                }
-
-                setFindingProducts(false);
+                setProducts(data.products);
             } catch (error) {
                 if (!abortController.signal.aborted) {
                     console.log(error);
@@ -37,29 +31,15 @@ export default function ItemList({ userCart, setUserCart, guestCart, setGuestCar
         return () => {
             abortController.abort();
         }
-    }, [findingProducts])
+    }, [])
 
-    let page;
-
-    if (!findingProducts) {
-        page = (
+    return (
+        <div style={{ width: '80%', margin: 'auto' }}>
             <div className="item-list-container">
                 {products.map((product) => {
                     return <Item key={product._id} product={product} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
                 })}
             </div>
-        )
-    }
-
-    if (findingProducts) {
-        page = (
-            <Loading/>
-        )
-    }
-
-    return (
-        <div style={{ width: '80%', margin: 'auto' }}>
-            { page }
         </div>
     )
 }

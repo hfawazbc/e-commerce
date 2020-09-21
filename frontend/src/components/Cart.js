@@ -1,31 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import '../styles/cart.css';
 import { UserContext } from '../contexts/UserContext';
 import CartItem from './CartItem';
-import Checkout from './Checkout';
 import Loading from './Loading';
+import NavBar from './NavBar';
+import Checkout from './Checkout';
 
 export default function Cart({ userCart, setUserCart, guestCart, setGuestCart }) {
-    const { user, findingUser } = useContext(UserContext);
-
-    const [findingCart, setFindingCart] = useState(true);
+    const { isUser, loading } = useContext(UserContext);
     
     useEffect(() => {
-        if (findingUser === false && user === true) {
+        if (!loading && isUser) {
             const fetchCart = async () => {
                 try {
                     const response = await fetch('http://localhost:5000/users/user/cart', {
                         method: 'GET',
                         credentials: 'include'
                     })
-        
-                    if (findingCart === true) {
-                        const data = await response.json();
+                    
+                    const data = await response.json();
 
-                        setUserCart(data.user.cart);
-                    }
-
-                    setFindingCart(false);
+                    setUserCart(data.user.cart);
                 } catch (error) {
                     console.log(error);
                 }
@@ -34,55 +29,42 @@ export default function Cart({ userCart, setUserCart, guestCart, setGuestCart })
             fetchCart();
         }
 
-    }, [findingUser, user, findingCart, setUserCart])
+    }, [loading, isUser, setUserCart])
 
-    let page;
+    let cart = [];
     
-    if (findingUser === false && user === true) {
-        if (findingCart === false) {
-            page = (
-                <div>
-                    {userCart.map(cartItem => {
-                        return <CartItem key={cartItem._id} cartItem={cartItem} setUserCart={ setUserCart }/>
-                    })}
-
-                    <div>
-                        {userCart.length > 0 ? <div><h1>Total: 000</h1><Link to="/">Return to home page</Link><Checkout/></div> : <div><h1>Your cart is empty.</h1><Link to="/">Return to home page</Link></div>}
-                    </div>
-                </div>
-            )
-        } 
-
-        if (findingCart === true) {
-            page = (
-                <Loading/>
-            )
-        }
+    if (!loading && isUser) {
+        cart = userCart;
     }
 
-    if (findingUser === false && user === false) {
-        page = (
-            <div>
-                {guestCart.map(cartItem => {
-                    return <CartItem key={cartItem._id} cartItem={cartItem} setGuestCart={setGuestCart}/>
-                })}
+    if (!loading && !isUser) {
+        cart = guestCart;
+    }
 
-                <div>
-                    {guestCart.length > 0 ? <div><h1>Total 000</h1><Link to="/">Return to home page</Link><Checkout/></div> : <div><h1>Your cart is empty.</h1><Link to="/">Return to home page</Link></div>}
+    if (loading) {
+        return (
+            <div>
+                <Loading/>
+            </div>
+        )
+    }
+    
+    if (!loading) {
+        return (
+            <div>
+                <NavBar userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+                <div style={{ width: '30%', margin: 'auto' }}>
+                    <div className="cart-main-container">
+                        <h1 className="cart-main-header">Your cart</h1>
+                        {cart.map(cartItem => {
+                            return <CartItem key={cartItem._id} cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart}/>
+                        })}
+                    </div>
+                </div>
+                <div className="cart-checkout">
+                    <Checkout guestCart={guestCart} setGuestCart={setGuestCart} userCart={userCart} setUserCart={setUserCart}/>
                 </div>
             </div>
         )
     }
-
-    if (findingUser === true && user === false) {
-        page = (
-            <Loading/>
-        )
-    }
-
-    return (
-        <div>
-            { page }
-        </div>
-    )
 }

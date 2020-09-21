@@ -11,7 +11,7 @@ export default function Register() {
     const [registered, setRegistered] = useState(false);
     const [foundError, setFoundError] = useState(false);
 
-    const { user, findingUser } = useContext(UserContext);
+    const { isUser, loading } = useContext(UserContext);
     const { setBodyColor } = useContext(BodyContext);
 
     useEffect(() => {
@@ -47,47 +47,41 @@ export default function Register() {
         fetchRegister();
     }
 
-    let page;
-
-    if (findingUser === false && user === false) {
-        page = (
-            <div className="main-container">
-                <h1 className="main-header">Register</h1>
-                <form className="form-container" onSubmit={(e) => handleSubmit(e)}>
-                    <div className="field-container">
-                        <label className="field" htmlFor="email">Email</label>
-                        <input className="field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                    </div>
-                    <div className="field-container">
-                        <label className="field" htmlFor="password">Password</label>
-                        <input className="field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    </div>
-                    <button className="submit-btn" type="submit">Register</button>
-                </form>
-
-                <div className="link-container">Already have an account? <a className="link" href="/sign-in">Sign in</a></div>
-
-                <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
-                <Route render={ () => { if ((foundError === false) && (registered === true)) return <Redirect to="/sign-in"/> } }/>
-            </div>
+    if (loading) {
+        return (
+            <Loading/>
         )
     } 
-
-    if (findingUser === false && user === true) {
-        page = (
+    
+    if (!loading && isUser) {
+        return (
             <Redirect to="/"/>
         )
     }
-
-    if (findingUser === true && user === false) {
-        page = (
-            <Loading/>
+    
+    if (!loading && !isUser) {
+        return (
+            <div style={{ width: '30%', margin: 'auto' }}>
+                <div className="main-container">
+                    <h1 className="main-header">Register</h1>
+                    <form className="form-container" onSubmit={(e) => handleSubmit(e)}>
+                        <div className="field-container">
+                            <label className="field" htmlFor="email">Email</label>
+                            <input className="field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        </div>
+                        <div className="field-container">
+                            <label className="field" htmlFor="password">Password</label>
+                            <input className="field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        </div>
+                        <button className="submit-btn" type="submit">Register</button>
+                    </form>
+    
+                    <div className="link-container">Already have an account? <a className="link" href="/sign-in">Sign in</a></div>
+    
+                    <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
+                    <Route render={ () => { if ((foundError === false) && (registered === true)) return <Redirect to="/sign-in"/> } }/>
+                </div>
+            </div>
         )
     }
-
-    return (
-        <div style={{ width: '30%', margin: 'auto' }}>
-            { page }
-        </div>
-    )
 }

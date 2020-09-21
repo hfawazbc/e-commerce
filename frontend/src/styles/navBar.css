@@ -1,6 +1,6 @@
 .guest-navbar-container {
     display: grid;
-    grid-template-columns: 4fr 1fr 1fr 1fr;
+    grid-template-columns: 4fr 1fr 1fr;
 
     column-gap: 10px;
 
@@ -26,11 +26,11 @@
     margin-bottom: 50px;
 }
 
-.cart-count {
+.navbar-cart-count {
     margin: auto;
 }
 
-.cart-container {
+.navbar-cart-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 
@@ -41,7 +41,7 @@
     padding: 5px;
 }
 
-.cart-image {
+.navbar-cart-image {
     margin: auto;
 
     width: 30px;

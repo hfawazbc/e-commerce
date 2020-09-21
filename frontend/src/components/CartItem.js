@@ -1,45 +1,29 @@
 import React, { useContext } from 'react';
+import '../styles/cartItem.css';
 import { UserContext } from '../contexts/UserContext';
 import CartRemoveItem from './CartRemoveItem';
 
 export default function CartItem({ cartItem, setUserCart, setGuestCart}) {
-    const { findingUser, user } = useContext(UserContext);
+    const { isUser } = useContext(UserContext);
 
-    let page;
+    let item = null;
 
-    if (!findingUser && user) {
-        page = (
-            <div>
-                <p>{cartItem.item.title}</p>
-                <p>{cartItem.item.price}</p>
-                <p>Subtotal 000</p>
-
-                {/* <label htmlFor="quantity">Quantity</label>
-                <input id="quantity" type="number" value={quantity} onChange={() => console.log('Changed quantity.')}/> */}
-
-                <CartRemoveItem cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart} />
-            </div>
-        )
+    if (isUser) {
+        item = cartItem.item;
     }
 
-    if (!findingUser && !user) {
-        page = (
-            <div>
-                <p>{cartItem.title}</p>
-                <p>{cartItem.price}</p>
-                <p>Subtotal 000</p>
-
-                {/* <label htmlFor="quantity">Quantity</label>
-                <input id="quantity" type="number" value={quantity} onChange={() => console.log('Changed quantity.')}/> */}
-
-                <CartRemoveItem cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart} />
-            </div>
-        )
+    if (!isUser) {
+        item = cartItem;
     }
     
     return (
         <div>
-            { page }
+            <div className="cart-item-container">
+                <h3 className="cart-item-detail">{item.title}</h3>
+                <p className="cart-item-detail">${item.price}</p>
+
+                <CartRemoveItem cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart}/>
+            </div>
         </div>
     )
 }

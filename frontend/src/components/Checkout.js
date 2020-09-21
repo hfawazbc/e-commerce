@@ -1,18 +1,30 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import '../styles/cart.css';
 import { loadStripe } from '@stripe/stripe-js';
 import { UserContext } from '../contexts/UserContext';
-import Loading from './Loading';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-export default function Checkout() {
-    const { user, findingUser } = useContext(UserContext);
+export default function Checkout({ userCart, setUserCart, guestCart, setGuestCart }) {
+    const { isUser, loading } = useContext(UserContext);
 
-    const handleCheckout = async (e) => {
+    let cart = {
+        type: '',
+        data: []
+    };
+
+    const handleClick = async (e) => {
         e.preventDefault();
 
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (!loading && !isUser) {
+            cart.type = 'guest';
+            cart.data = guestCart;
+        }
+
+        if (!loading && isUser) {
+            cart.type = 'user';
+            cart.data = userCart;
+        }
 
         const stripe = await stripePromise;
 
@@ -45,37 +57,26 @@ export default function Checkout() {
         fetchCheckoutSession();
     }
 
-    let page;
-
-    if (findingUser === false && user === true) {
-        page = (
-            <button role="link" onClick={(e) => handleCheckout(e)}>
-                Checkout
-            </button>
-        )
-    }
-
-    if (findingUser === false && user === false) {
-        page = (
-            <div>
-                <button role="link" onClick={(e) => handleCheckout(e)}>
-                    Check out as guest
-                </button>
-
-                <Link to="/sign-in">Sign in to check out</Link>
+    if (!loading && !isUser) {
+        return (
+            <div style={{ width: '30%', margin: 'auto' }}>
+                <div className="checkout-container">
+                    <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
+                        Check out as guest
+                    </button>
+                    <a className="checkout-link" href="/sign-in">Sign in to check out</a>
+                </div>
             </div>
         )
     }
 
-    if (findingUser === true && user === false) {
-        page = (
-            <Loading/>
+    if (!loading && isUser) {
+        return (
+            <div style={{ width: '30%', margin: 'auto' }}>
+                <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
+                    Checkout
+                </button>
+            </div>
         )
     }
-
-    return (
-        <div>
-            { page }
-        </div>
-    )
 }

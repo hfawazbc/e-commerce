@@ -35,25 +35,46 @@ router.post('/', upload.fields([{ name: 'files' }]), (req, res, next) => {
 
 router.post('/checkout-session', async (req, res, next) => {
     const cart = req.body.cart;
-
     let items = [];
-    
-    let i = 0;
-    while (i < cart.length) {
-        let item = {
-            price_data: {
-                currency: "usd",
-                product_data: {
-                    name: cart[i].title
+
+    if (cart.type === 'guest') {
+        cart.data.forEach(cartItem => {
+            let item = {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: cartItem.title
+                    },
+                    unit_amount: cartItem.price * 100
                 },
-                unit_amount: cart[i].price * 100
-            },
-            quantity: cart[i].quantity,
-        }
+                quantity: cartItem.quantity,
+            }
+    
+            items.push(item);
+        })
+    }
 
-        items.push(item);
+    if (cart.type === 'user') {
+        let ids = cart.data.map(cartItem => {
+            return cartItem.item;
+        })
 
-        i++;
+        let products = await Product.find({_id: {$in: ids}});
+
+        products.forEach(product => {
+            let item = {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: product.title
+                    },
+                    unit_amount: product.price * 100
+                },
+                quantity: 1
+            }
+
+            items.push(item);
+        })
     }
 
     const session = await stripe.checkout.sessions.create({
