@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/itemList.css';
+import '../styles/item.css';
 import Item from './Item';
 
 export default function ItemList({ userCart, setUserCart, guestCart, setGuestCart }) {

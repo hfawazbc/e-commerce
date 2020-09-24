@@ -45,7 +45,8 @@ export default function CartAddItem({ product, userCart, setUserCart, guestCart,
                 title: product.title,
                 description: product.description,
                 price: product.price,
-                quantity: 1
+                quantity: 1,
+                images: product.images
             }
 
             cart.push(item);

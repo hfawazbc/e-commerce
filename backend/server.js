@@ -58,13 +58,35 @@ app.get('/', (req, res, next) => {
     res.send('Welcome to the backend.');
 })
 
+/* Files routes */
 app.get('/files', (req, res, next) => {
     gfs.files.find().toArray((error, files) => {
         if (error) {
             console.log(error);
         }
 
-        res.json({ message: 'Found files.', files })
+        res.json({ files });
+    })
+})
+
+app.get('/files/:filename', (req, res, next) => {
+    gfs.files.findOne({ filename: req.params.filename }, (error, file) => {
+        if (error) {
+            console.log(error);
+        }
+
+        res.json({ file });
+    })
+})
+
+app.get('/files/images/:filename', (req, res, next) => {
+    gfs.files.findOne({ filename: req.params.filename }, (error, file) => {
+        if (error) {
+            console.log(error);
+        }
+
+        const readstream = gfs.createReadStream(file.filename);
+        readstream.pipe(res);
     })
 })
 
