@@ -23,7 +23,11 @@ export default function CartAddItem({ product, userCart, setUserCart, guestCart,
 
                 const data = await response.json();
 
-                setUserCart(data.user.cart);
+                if (!data.isAdded) {
+                    alert(data.message);
+                }
+
+                setUserCart(data.cart);
             } catch (error) {
                 console.log(error);
             }
@@ -37,16 +41,15 @@ export default function CartAddItem({ product, userCart, setUserCart, guestCart,
 
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        let checkCart = cart.filter(item => item._id === product._id);
+        let filterCart = cart.filter(item => item._id === product._id);
 
-        if (checkCart.length === 0) {
+        if (filterCart.length === 0) {
             let item = {
                 _id: product._id,
-                title: product.title,
-                description: product.description,
+                name: product.name,
                 price: product.price,
-                quantity: 1,
-                images: product.images
+                images: product.images,
+                quantity: 1
             }
 
             cart.push(item);
@@ -54,6 +57,8 @@ export default function CartAddItem({ product, userCart, setUserCart, guestCart,
             localStorage.setItem('cart', JSON.stringify(cart));
 
             setGuestCart(cart);
+        } else {
+            alert('Item is already in cart.');
         }
     }
 
@@ -63,9 +68,7 @@ export default function CartAddItem({ product, userCart, setUserCart, guestCart,
                 <button className="add-btn" onClick={(e) => handleGuestClick(e)}>Add to cart</button>
             </div>
         )
-    }
-
-    if (isUser) {
+    } else {
         return (
             <div>
                 <button className="add-btn" onClick={(e) => handleUserClick(e)}>Add to cart</button>

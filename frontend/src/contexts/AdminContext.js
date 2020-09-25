@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-export const UserContext = createContext();
+export const AdminContext = createContext();
 
-export default function UserContextProvider({ children }) {
-    const [isUser, setIsUser] = useState(false);
+export default function AdminContextProvider({ children }) {
+    const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -12,7 +12,7 @@ export default function UserContextProvider({ children }) {
         if (loading) {
             const fetchUser = async () => {
                 try {
-                    const response = await fetch('http://localhost:5000/users/user', {
+                    const response = await fetch('http://localhost:5000/users/admin', {
                         method: 'GET',
                         credentials: 'include',
                         signal: abortController.signal
@@ -20,7 +20,7 @@ export default function UserContextProvider({ children }) {
 
                     const data = await response.json();
     
-                    setIsUser(data.isAuth);
+                    setIsAdmin(data.isAdmin);
                     setLoading(false);
                 } catch (error) {
                     if (!abortController.signal.aborted) {
@@ -38,8 +38,8 @@ export default function UserContextProvider({ children }) {
     }, [loading])
 
     return (
-        <UserContext.Provider value={{ isUser, setIsUser, loading, setLoading }}>
+        <AdminContext.Provider value={{ isAdmin, setIsAdmin, loading, setLoading }}>
             { children }
-        </UserContext.Provider>
+        </AdminContext.Provider>
     )
 }

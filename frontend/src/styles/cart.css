@@ -2,7 +2,7 @@
     display: grid
 }
 
-.cart-main-header {
+.cart-primary-header, .cart-secondary-header {
     text-align: center;
     margin-bottom: 50px;
 }
@@ -12,11 +12,15 @@
     margin-bottom: 25px;
 }
 
-.checkout-container {
+.guest-checkout-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 
     column-gap: 25px;
+}
+
+.user-checkout-container {
+    display: grid;
 }
 
 .checkout-btn {

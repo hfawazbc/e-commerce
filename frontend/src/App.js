@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 import './styles/app.css';
 import Register from './components/Register';
 import SignIn from './components/SignIn';
-import SignOut from './components/SignOut';
 import Home from './components/Home';
 import Cart from './components/Cart';
 import Error from './components/Error';
@@ -22,7 +21,6 @@ export default function App() {
         <Switch>
           <Route exact path="/register" component={Register}/>
           <Route exact path="/sign-in" component={SignIn}/>
-          <Route exact path="/sign-out" component={SignOut}/>
           <Route exact path="/post" component={Post}/>
           <Route exact path="/" render={(props) => <Home {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>}/>
           <Route exact path="/cart" render={(props) => <Cart {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>}/>

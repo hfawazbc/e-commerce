@@ -8,8 +8,6 @@ import { BodyContext } from '../contexts/BodyContext';
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [authenticated, setAuthenticated] = useState(false);
-    const [foundError, setFoundError] = useState(false);
 
     const { isUser, setIsUser, loading } = useContext(UserContext);
     const { setBodyColor } = useContext(BodyContext);
@@ -37,11 +35,12 @@ export default function SignIn() {
     
                 const data = await response.json();
 
-                setAuthenticated(data.user.authenticated);
-
-                setIsUser(data.user.authenticated);
+                if (!data.isSignedIn) {
+                    alert(data.message);
+                }
+                
+                setIsUser(data.isSignedIn);
             } catch (error) {
-                setFoundError(true);
                 console.log(error);
             }
         }
@@ -59,9 +58,7 @@ export default function SignIn() {
         return (
             <Redirect to="/"/>
         )
-    }
-
-    if (!loading && !isUser) {
+    } else if (!loading && !isUser) {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
                 <div className="main-container">
@@ -80,8 +77,7 @@ export default function SignIn() {
 
                     <div className="link-container">Don't have an account? <a className="link" href="/register">Register</a></div>
                     
-                    <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
-                    <Route render={ () => { if ((foundError === false) && (authenticated === true)) return <Redirect to="/"/> } }/>
+                    <Route render={ () => { if (isUser) return <Redirect to="/"/> } }/>
                 </div>
             </div>
         )

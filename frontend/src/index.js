@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import UserContextProvider from './contexts/UserContext';
+import AdminContextProvider from './contexts/AdminContext';
 import BodyContextProvider from './contexts/BodyContext';
 import App from './App';
 
@@ -10,7 +11,9 @@ ReactDOM.render(
     <BodyContextProvider>
       <BrowserRouter>
         <UserContextProvider>
-          <App />
+          <AdminContextProvider>
+            <App />
+          </AdminContextProvider>
         </UserContextProvider>
       </BrowserRouter>
     </BodyContextProvider>

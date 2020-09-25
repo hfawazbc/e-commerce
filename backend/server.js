@@ -9,7 +9,7 @@ const MongoStore = require('connect-mongo')(session);
 const products = require('./routes/products');
 const users = require('./routes/users');
 
-/* MongoDB Configuration */
+/* MongoDB and Grid-FS Configuration */
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -53,7 +53,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* Routes */
 app.get('/', (req, res, next) => {
     res.send('Welcome to the backend.');
 })
@@ -90,6 +89,7 @@ app.get('/files/images/:filename', (req, res, next) => {
     })
 })
 
+/* Other routes */
 app.use('/products', products);
 app.use('/users', users);
 

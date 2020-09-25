@@ -19,9 +19,7 @@ export default function Checkout({ userCart, setUserCart, guestCart, setGuestCar
         if (!loading && !isUser) {
             cart.type = 'guest';
             cart.data = guestCart;
-        }
-
-        if (!loading && isUser) {
+        } else if (!loading && isUser) {
             cart.type = 'user';
             cart.data = userCart;
         }
@@ -60,7 +58,7 @@ export default function Checkout({ userCart, setUserCart, guestCart, setGuestCar
     if (!loading && !isUser) {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
-                <div className="checkout-container">
+                <div className="guest-checkout-container">
                     <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
                         Check out as guest
                     </button>
@@ -68,14 +66,14 @@ export default function Checkout({ userCart, setUserCart, guestCart, setGuestCar
                 </div>
             </div>
         )
-    }
-
-    if (!loading && isUser) {
+    } else if (!loading && isUser) {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
-                <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
+                <div className="user-checkout-container">
+                    <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
                     Checkout
-                </button>
+                    </button>
+                </div>
             </div>
         )
     }

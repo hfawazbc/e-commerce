@@ -23,7 +23,7 @@ export default function CartRemoveItem({ cartItem, setUserCart, setGuestCart }) 
 
                 const data = await response.json();
                 
-                setUserCart(data.user.cart);
+                setUserCart(data.cart);
             } catch (error) {
                 console.log(error);
             }
@@ -51,9 +51,7 @@ export default function CartRemoveItem({ cartItem, setUserCart, setGuestCart }) 
                 <button className="remove-btn" onClick={(e) => handleGuestClick(e)}>Remove from cart</button>
             </div>
         )
-    }
-
-    if (isUser) {
+    } else {
         return (
             <div>
                 <button className="remove-btn" onClick={(e) => handleUserClick(e)}>Remove from cart</button>

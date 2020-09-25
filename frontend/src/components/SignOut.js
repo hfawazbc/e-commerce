@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import Loading from './Loading';
 
 export default function SignOut() {
-    const [authenticated, setAuthenticated] = useState(true);
-    const [foundError, setFoundError] = useState(false);
-
     const { isUser, setIsUser, loading } = useContext(UserContext);
 
     const handleClick = (e) => {
@@ -21,12 +18,8 @@ export default function SignOut() {
     
                 const data = await response.json();
 
-                setAuthenticated(data.user.authenticated);
-
-                setIsUser(data.user.authenticated);
+                setIsUser(data.isAuth);
             } catch (error) {
-                setFoundError(true);
-
                 console.log(error);
             }
         }
@@ -44,15 +37,12 @@ export default function SignOut() {
         return (
             <Redirect to="/"/>
         )
-    }
-
-    if (!loading && isUser) {
+    } else if (!loading && isUser) {
         return (
-            <div>
-                <button onClick={(e) => handleClick(e)}>Sign out</button>
+            <div className="sign-out-container">
+                <button className="sign-out-btn" onClick={(e) => handleClick(e)}>Sign out</button>
 
-                <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
-                <Route render={ () => { if ((foundError === false) && (authenticated === false)) return <Redirect to="/sign-in"/> } }/>
+                <Route render={ () => { if (!isUser) return <Redirect to="/"/> } }/>
             </div>
         )
     }

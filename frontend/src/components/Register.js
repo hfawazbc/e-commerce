@@ -9,7 +9,6 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [registered, setRegistered] = useState(false);
-    const [foundError, setFoundError] = useState(false);
 
     const { isUser, loading } = useContext(UserContext);
     const { setBodyColor } = useContext(BodyContext);
@@ -35,11 +34,13 @@ export default function Register() {
                 })
 
                 const data = await response.json();
-                
-                setRegistered(data.user.registered);
-            } catch (error) {
-                setFoundError(true);
 
+                if (!data.isRegistered) {
+                    alert(data.message);
+                }
+                
+                setRegistered(data.isRegistered);
+            } catch (error) {
                 console.log(error);
             }
         }
@@ -57,9 +58,7 @@ export default function Register() {
         return (
             <Redirect to="/"/>
         )
-    }
-    
-    if (!loading && !isUser) {
+    } else if (!loading && !isUser) {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
                 <div className="main-container">
@@ -78,8 +77,7 @@ export default function Register() {
     
                     <div className="link-container">Already have an account? <a className="link" href="/sign-in">Sign in</a></div>
     
-                    <Route render={ () => { if (foundError === true) return <Redirect to="*"/> } }/>
-                    <Route render={ () => { if ((foundError === false) && (registered === true)) return <Redirect to="/sign-in"/> } }/>
+                    <Route render={ () => { if (registered === true) return <Redirect to="/sign-in"/> } }/>
                 </div>
             </div>
         )

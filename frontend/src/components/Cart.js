@@ -20,7 +20,7 @@ export default function Cart({ userCart, setUserCart, guestCart, setGuestCart })
                     
                     const data = await response.json();
 
-                    setUserCart(data.user.cart);
+                    setUserCart(data.cart);
                 } catch (error) {
                     console.log(error);
                 }
@@ -35,9 +35,7 @@ export default function Cart({ userCart, setUserCart, guestCart, setGuestCart })
     
     if (!loading && isUser) {
         cart = userCart;
-    }
-
-    if (!loading && !isUser) {
+    } else if (!loading && !isUser) {
         cart = guestCart;
     }
 
@@ -47,23 +45,26 @@ export default function Cart({ userCart, setUserCart, guestCart, setGuestCart })
                 <Loading/>
             </div>
         )
-    }
-    
-    if (!loading) {
+    } else {
         return (
             <div>
                 <NavBar userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
                 <div style={{ width: '30%', margin: 'auto' }}>
                     <div className="cart-main-container">
-                        <h1 className="cart-main-header">Your cart</h1>
+                        <h1 className="cart-primary-header">Cart</h1>
                         {cart.map(cartItem => {
                             return <CartItem key={cartItem._id} cartItem={cartItem} setUserCart={ setUserCart } setGuestCart={setGuestCart}/>
                         })}
                     </div>
                 </div>
-                <div className="cart-checkout">
-                    <Checkout guestCart={guestCart} setGuestCart={setGuestCart} userCart={userCart} setUserCart={setUserCart}/>
-                </div>
+                { cart.length > 0 ? 
+                    <div className="cart-checkout">
+                        <Checkout guestCart={guestCart} setGuestCart={setGuestCart} userCart={userCart} setUserCart={setUserCart}/>
+                    </div>
+                :
+                    <h2 className="cart-secondary-header">Your cart is empty.</h2>
+                }
+                
             </div>
         )
     }
