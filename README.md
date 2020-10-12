@@ -22,6 +22,7 @@ E-commerce is an application for viewing and purchasing items online either as a
 ## Installation
 - Run ```git init``` to initialize git in your local repository.
 - Run ```git pull https://github.com/hfawazbc/e-commerce``` to pull the project files from the master branch to your local git repository.
+- Run ```npm install``` to install the required dependencies.
 
 ## Usage
 In your project directory, you can run:
