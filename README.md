@@ -22,12 +22,19 @@ E-commerce is an application for viewing and purchasing items online either as a
 ## Installation
 - Run ```git init``` to initialize git in your local repository.
 - Run ```git pull https://github.com/hfawazbc/e-commerce``` to pull the project files from the master branch to your local git repository.
+- Run ```npm install``` in both the ```frontend``` and ```backend``` directories to install the required dependencies
 
 ## Usage
-In your project directory, you can run:
+In your project's ```frontend``` directory, you can run:
 - ```npm start``` to run the app in development mode. To view the website, open http://localhost:3000 in your browser.
 - ```npm test``` to launch the test runner in the interactive watch mode.
 - ```npm run build``` to build the app for production to the ```build``` folder. The app is now ready for deployment!
+
+In your project's ```backend``` directory, you can run:
+- ```npm run start``` to run the server using node.
+- ```npm run devStart``` to run the server using nodemon.
+
+Make sure both the client and server are running to interact with the website.
 
 ## License
 [MIT](./LICENSE)

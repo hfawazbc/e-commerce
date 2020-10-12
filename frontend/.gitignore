@@ -24,4 +24,3 @@ yarn-error.log*
 
 # added by developer
 .env
-/contexts
