@@ -22,8 +22,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd frontend && npm run build",
-    "install-client": "cd frontend && npm install",
+    "build": "cd .. && cd frontend && npm run build",
+    "install-client": "cd .. && cd frontend && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
     "start": "node server.js",
     "devStart": "nodemon server.js"
