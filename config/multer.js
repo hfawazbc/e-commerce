@@ -9,7 +9,7 @@ const storage = new GridFsStorage({
   options: { useUnifiedTopology: true },
   file: (req, file) => {
     return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
+      crypto.randomBytes(16, async (err, buf) => {
         if (err) return reject(err);
 
         const filename = buf.toString('hex') + path.extname(file.originalname);

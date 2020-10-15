@@ -43,7 +43,7 @@ export default function Cart({ isUser, userCart, setUserCart, guestCart, setGues
             </div>
             { cart.length > 0 ? 
                 <div className="cart-checkout">
-                    <Checkout guestCart={guestCart} setGuestCart={setGuestCart} userCart={userCart} setUserCart={setUserCart}/>
+                    <Checkout isUser={isUser} userCart={userCart} guestCart={guestCart} />
                 </div>
             :
                 <h2 className="cart-secondary-header">Your cart is empty.</h2>

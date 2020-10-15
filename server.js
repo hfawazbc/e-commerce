@@ -62,11 +62,14 @@ const main = async () => {
 
         return res.json({ products });
     })
-    .post(upload.fields([{ name: 'files' }]), async (req, res, next) => {
-        const newProduct = {
+    .post(isAdmin, upload.array('files'), async (req, res, next) => {
+       const newProduct = {
             name: req.body.name,
             price: req.body.price,
-            images: req.files['files']
+            description: "",
+            stock: 0,
+            ratings: [],
+            images: req.files
         }
 
         const productId = await createProduct(client, newProduct);
@@ -144,6 +147,14 @@ const main = async () => {
         return res.json({ cart });
     })
 
+    app
+    .route('/users/user/cart/checkout-session')
+    .post(async (req, res, next) => {
+        let sessionId = await checkoutUserCartProducts(client, req.body.cartType, req.body.cartData);
+
+        return res.json({ sessionId });
+    })
+
     // ----- PORT ----- //
 
     const port = process.env.PORT || 5000;
@@ -153,6 +164,60 @@ const main = async () => {
 main();
 
 // ----- DATABASE FUNCTIONS ----- //
+
+const checkoutUserCartProducts = async (client, cartType, cartData) => {
+    let items = [];
+
+    if (cartType === 'guest') {
+        cartData.forEach(cartItem => {
+            let item = {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: cartItem.name
+                    },
+                    unit_amount: cartItem.price * 100
+                },
+                quantity: cartItem.quantity,
+            }
+    
+            items.push(item);
+        })
+    }
+
+    if (cartType === 'user') {
+        const cartItemIds = cartData.map(cartItem => { return ObjectId(cartItem._id) })
+
+        const cursor = await client.db("projectDB").collection("products").find({ _id: { $in: cartItemIds } });
+
+        const products = await cursor.toArray();
+
+        products.forEach(product => {
+            let item = {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: product.name
+                    },
+                    unit_amount: product.price * 100
+                },
+                quantity: 1
+            }
+
+            items.push(item);
+        })
+    }
+
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: items,
+        mode: "payment",
+        success_url: "http://localhost:3000/payment-successful",
+        cancel_url: "http://localhost:3000/payment-cancelled",
+    });
+
+    return session.id;
+}
 
 const removeProductFromUserCart = async (client, itemId, userId) => {
     const product = await client.db("projectDB").collection("products").findOne({ _id: new ObjectId(itemId) });
@@ -180,23 +245,24 @@ const findUserCart = async (client, userId) => {
     return user.cart;
 }
 
-const createUser = async (client, userEmail, userPassword) => {
-    const user = await client.db("projectDB").collection("users").findOne({ email: userEmail });
+const createUser = async (client, email, password) => {
+    const user = await client.db("projectDB").collection("users").findOne({ email });
 
     if (user) return false; 
 
     if (!user) {
-        const encryptedPassword = encryption.generatePassword(userPassword);
+        const encryptedPassword = encryption.generatePassword(password);
     
         const salt = encryptedPassword.salt;
         const hash = encryptedPassword.hash;
     
         await client.db("projectDB").collection("users").insertOne({
-            email: userEmail,
+            email,
             hash,
             salt,
-            admin: false,
-            cart: []
+            cart: [],
+            wishlist: [],
+            purchased: []
         });
 
         return true;
@@ -234,75 +300,9 @@ const configurePassport = async (client) => {
 
     passport.serializeUser(async (user, done) => { done(null, user._id) });
     
-    passport.deserializeUser(async (_id, done) => {
-        const user = await client.db("projectDB").collection("users").findOne({ _id });
+    passport.deserializeUser(async (userId, done) => {
+        const user = await client.db("projectDB").collection("users").findOne({ _id: userId });
 
         done(null, user);
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-/* 
-router.post('/user/cart/checkout-session', async (req, res, next) => {
-    const cart = req.body.cart;
-    let items = [];
-
-    if (cart.type === 'guest') {
-        cart.data.forEach(cartItem => {
-            let item = {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                        name: cartItem.title
-                    },
-                    unit_amount: cartItem.price * 100
-                },
-                quantity: cartItem.quantity,
-            }
-    
-            items.push(item);
-        })
-    }
-
-    if (cart.type === 'user') {
-        let ids = cart.data.map(cartItem => {
-            return cartItem.item;
-        })
-
-        let products = await Product.find({_id: {$in: ids}});
-
-        products.forEach(product => {
-            let item = {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                        name: product.title
-                    },
-                    unit_amount: product.price * 100
-                },
-                quantity: 1
-            }
-
-            items.push(item);
-        })
-    }
-
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: items,
-        mode: "payment",
-        success_url: "http://localhost:3000/success",
-        cancel_url: "http://localhost:3000/cancel",
-    });
-
-    res.json({ id: session.id });
-}) */

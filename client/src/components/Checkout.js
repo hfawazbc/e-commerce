@@ -1,27 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import '../styles/cart.css';
 import { loadStripe } from '@stripe/stripe-js';
-import { UserContext } from '../contexts/UserContext';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-export default function Checkout({ userCart, setUserCart, guestCart, setGuestCart }) {
-    const { isUser, loading } = useContext(UserContext);
-
-    let cart = {
-        type: '',
-        data: []
-    };
-
+export default function Checkout({ isUser, userCart, guestCart }) {
     const handleClick = async (e) => {
         e.preventDefault();
 
-        if (!loading && !isUser) {
-            cart.type = 'guest';
-            cart.data = guestCart;
-        } else if (!loading && isUser) {
-            cart.type = 'user';
-            cart.data = userCart;
+        let cartData;
+        let cartType;
+
+        if (!isUser) {
+            cartType = 'guest';
+            cartData = guestCart;
+        } else {
+            cartType = 'user';
+            cartData = userCart;
         }
 
         const stripe = await stripePromise;
@@ -34,19 +29,16 @@ export default function Checkout({ userCart, setUserCart, guestCart, setGuestCar
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        cart
+                        cartType,
+                        cartData
                     })
                 })
     
-                const session = await response.json();
+                const data = await response.json();
 
-                const result = await stripe.redirectToCheckout({
-                    sessionId: session.id,
-                });
+                const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
 
-                if (result.error) {
-                    console.log(result.error.message);
-                }
+                if (result.error) console.log(result.error.message);
             } catch (error) {
                 console.log(error);
             }
@@ -55,7 +47,7 @@ export default function Checkout({ userCart, setUserCart, guestCart, setGuestCar
         fetchCheckoutSession();
     }
 
-    if (!loading && !isUser) {
+    if (!isUser) {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
                 <div className="guest-checkout-container">
@@ -66,7 +58,7 @@ export default function Checkout({ userCart, setUserCart, guestCart, setGuestCar
                 </div>
             </div>
         )
-    } else if (!loading && isUser) {
+    } else {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
                 <div className="user-checkout-container">

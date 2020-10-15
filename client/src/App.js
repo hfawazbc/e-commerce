@@ -53,9 +53,9 @@ export default function App() {
               </div>
             }/>
 
-            <Route exact path="/success" component={PaymentSuccessful}/>
+            <Route exact path="/payment-successful" component={PaymentSuccessful}/>
   
-            <Route exact path="/cancel" component={PaymentCancelled}/>
+            <Route exact path="/payment-cancelled" component={PaymentCancelled}/>
             
             <Route path="*" component={PageNotFound}/>
           </Switch>
