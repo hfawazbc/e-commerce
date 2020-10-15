@@ -1,11 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
-import Loading from './Loading';
 
-export default function SignOut() {
-    const { isUser, setIsUser, loading } = useContext(UserContext);
-
+export default function SignOut({ isUser, setIsUser }) {
     const handleClick = (e) => {
         e.preventDefault();
 
@@ -27,17 +23,11 @@ export default function SignOut() {
         fetchSignOut();
     }
 
-    if (loading) {
-        return (
-            <Loading/>
-        )
-    }
-
-    if (!loading && !isUser) {
+    if (!isUser) {
         return (
             <Redirect to="/"/>
         )
-    } else if (!loading && isUser) {
+    } else {
         return (
             <div className="sign-out-container">
                 <button className="sign-out-btn" onClick={(e) => handleClick(e)}>Sign out</button>

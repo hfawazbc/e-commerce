@@ -1,10 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import '../styles/item.css';
-import { UserContext } from '../contexts/UserContext';
 
-export default function CartAddItem({ product, userCart, setUserCart, guestCart, setGuestCart }) {
-    const { isUser } = useContext(UserContext);
-
+export default function CartAddItem({ product, isUser, userCart, setUserCart, guestCart, setGuestCart }) {
     const handleUserClick = (e) => {
         e.preventDefault();
 
@@ -22,10 +19,6 @@ export default function CartAddItem({ product, userCart, setUserCart, guestCart,
                 })
 
                 const data = await response.json();
-
-                if (!data.isAdded) {
-                    alert(data.message);
-                }
 
                 setUserCart(data.cart);
             } catch (error) {

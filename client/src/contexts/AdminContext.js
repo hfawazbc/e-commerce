@@ -4,41 +4,40 @@ export const AdminContext = createContext();
 
 export default function AdminContextProvider({ children }) {
     const [isAdmin, setIsAdmin] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [isAuthenticatingAdmin, setIsAuthenticatingAdmin] = useState(true);
 
     useEffect(() => {
         const abortController = new AbortController();
+        
+        const fetchUser = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/users/admin', {
+                    method: 'GET',
+                    credentials: 'include',
+                    signal: abortController.signal
+                });
 
-        if (loading) {
-            const fetchUser = async () => {
-                try {
-                    const response = await fetch('http://localhost:5000/users/admin', {
-                        method: 'GET',
-                        credentials: 'include',
-                        signal: abortController.signal
-                    });
+                const data = await response.json();
 
-                    const data = await response.json();
-    
-                    setIsAdmin(data.isAdmin);
-                    setLoading(false);
-                } catch (error) {
-                    if (!abortController.signal.aborted) {
-                        console.log(error);
-                    }
+                setIsAdmin(data.isAdmin);
+                
+                setIsAuthenticatingAdmin(false);
+            } catch (error) {
+                if (!abortController.signal.aborted) {
+                    console.log(error);
                 }
             }
-    
-            fetchUser();
         }
 
+        fetchUser();
+    
         return () => {
             abortController.abort();
         }
-    }, [loading])
+    }, [])
 
     return (
-        <AdminContext.Provider value={{ isAdmin, setIsAdmin, loading, setLoading }}>
+        <AdminContext.Provider value={{ isAdmin, setIsAdmin, isAuthenticatingAdmin }}>
             { children }
         </AdminContext.Provider>
     )

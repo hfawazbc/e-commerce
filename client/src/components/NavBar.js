@@ -1,15 +1,11 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import '../styles/navBar.css';
 import shoppingCart from '../icons/shopping-cart.png';
-import { UserContext } from '../contexts/UserContext';
-import Loading from './Loading';
 import SignOut from './SignOut';
 
-export default function NavBar({ userCart, setUserCart, guestCart, setGuestCart }) {
-    const { isUser, loading } = useContext(UserContext);
-
+export default function NavBar({ isUser, setIsUser, userCart, setUserCart, guestCart }) {
     useEffect(() => {
-        if (!loading && isUser) {
+        if (isUser) {
             const fetchCart = async () => {
                 try {
                     const response = await fetch('http://localhost:5000/users/user/cart', {
@@ -28,18 +24,14 @@ export default function NavBar({ userCart, setUserCart, guestCart, setGuestCart 
             fetchCart();
         }
 
-    }, [loading, isUser, setUserCart])
+    }, [isUser, setUserCart])
 
-    if (loading) {
-        return (
-            <Loading/>
-        )
-    } else if (!loading && isUser) {
+    if (isUser) {
         return (
             <div>
                 <div className="navbar-container">
                     <a className="navbar-link" href="/"><h3>E-commerce</h3></a>
-                    <SignOut/>
+                    <SignOut isUser={isUser} setIsUser={setIsUser}/>
                     <div>
                         <a className="navbar-cart-container" href="/cart" >
                             <img className="navbar-cart-image" src={shoppingCart} alt=""/>
@@ -49,7 +41,7 @@ export default function NavBar({ userCart, setUserCart, guestCart, setGuestCart 
                 </div>
             </div>
         )
-    } else if (!loading && !isUser) {
+    } else {
         return (
             <div>
                 <div className="navbar-container">

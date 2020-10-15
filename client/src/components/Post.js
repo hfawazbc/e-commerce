@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { AdminContext } from '../contexts/AdminContext';
-import Loading from './Loading';
 
-export default function Post() {
+export default function Post({ isAdmin }) {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
-    const { isAdmin, loading } = useContext(AdminContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -42,17 +39,11 @@ export default function Post() {
         fetchProduct();
     }
 
-    if (loading) {
-        return (
-            <Loading/>
-        )
-    }
-
-    if (!loading && !isAdmin) {
+    if (!isAdmin) {
         return (
             <Redirect to="/"/>
         )
-    } else if (!loading && isAdmin) {
+    } else {
         return (
             <div>
                 <form onSubmit={(e) => handleSubmit(e)}>

@@ -1,20 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/form.css';
 import { Redirect, Route } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
-import Loading from './Loading';
-import { BodyContext } from '../contexts/BodyContext';
 
-export default function SignIn() {
+export default function SignIn({ isUser, setIsUser }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const { isUser, setIsUser, loading } = useContext(UserContext);
-    const { setBodyColor } = useContext(BodyContext);
-
-    useEffect(() => {
-        setBodyColor('#fff');
-    }, [setBodyColor])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -48,17 +38,11 @@ export default function SignIn() {
         fetchSignIn();
     }
 
-    if (loading) {
-        return (
-            <Loading/>
-        )
-    }
-
-    if (!loading && isUser) {
+    if (isUser) {
         return (
             <Redirect to="/"/>
         )
-    } else if (!loading && !isUser) {
+    } else {
         return (
             <div style={{ width: '30%', margin: 'auto' }}>
                 <div className="main-container">

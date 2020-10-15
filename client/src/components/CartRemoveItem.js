@@ -1,10 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import '../styles/cartItem.css';
-import { UserContext } from '../contexts/UserContext';
 
-export default function CartRemoveItem({ cartItem, setUserCart, setGuestCart }) {
-    const { isUser } = useContext(UserContext);
-
+export default function CartRemoveItem({ cartItem, isUser, setUserCart, setGuestCart }) {
     const handleUserClick = (e) => {
         e.preventDefault();
 
@@ -16,7 +13,7 @@ export default function CartRemoveItem({ cartItem, setUserCart, setGuestCart }) 
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        itemId: cartItem.item
+                        itemId: cartItem._id
                     }),
                     credentials: 'include'
                 })

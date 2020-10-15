@@ -1,33 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './styles/app.css';
 import Register from './components/Register';
 import SignIn from './components/SignIn';
-import Home from './components/Home';
+import NavBar from './components/NavBar';
+import ItemList from './components/ItemList';
 import Cart from './components/Cart';
-import Error from './components/Error';
+import Post from './components/Post';
+import PageNotFound from './components/PageNotFound';
+import PageLoading from './components/PageLoading';
 import PaymentSuccessful from './components/PaymentSuccessful';
 import PaymentCancelled from './components/PaymentCancelled';
-
-import Post from './components/Post';
+import { UserContext } from './contexts/UserContext';
+import { AdminContext } from './contexts/AdminContext';
 
 export default function App() {
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
   const [guestCart, setGuestCart] = useState(cart);
   const [userCart, setUserCart] = useState([]);
 
-  return (
-    <div>
-        <Switch>
-          <Route exact path="/register" component={Register}/>
-          <Route exact path="/sign-in" component={SignIn}/>
-          <Route exact path="/post" component={Post}/>
-          <Route exact path="/" render={(props) => <Home {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>}/>
-          <Route exact path="/cart" render={(props) => <Cart {...props} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>}/>
-          <Route exact path="/success" component={PaymentSuccessful}/>
-          <Route exact path="/cancel" component={PaymentCancelled}/>
-          <Route path="*" component={Error}/>
-        </Switch>
-    </div>
-  );
+  const { isUser, setIsUser, isAuthenticatingUser } = useContext(UserContext);
+  const { isAdmin, isAuthenticatingAdmin } = useContext(AdminContext);
+
+  if (isAuthenticatingUser && isAuthenticatingAdmin) {
+    return (
+      <div>
+        <PageLoading/>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+          <Switch>
+            <Route exact path="/register" render={(props) => <Register {...props} isUser={isUser}/>}/>
+  
+            <Route exact path="/sign-in" render={(props) => <SignIn {...props} isUser={isUser} setIsUser={setIsUser}/>}/>
+  
+            <Route exact path="/post" render={(props) => <Post {...props} isAdmin={isAdmin}/>}/>
+  
+            <Route exact path="/" render={(props) =>
+              <div>
+                <NavBar isUser={isUser} setIsUser={setIsUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart}/>
+                <ItemList {...props} isUser={isUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+              </div>
+            }/>
+  
+            <Route exact path="/cart" render={(props) => 
+              <div>
+                <NavBar isUser={isUser} setIsUser={setIsUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart}/>
+                <Cart {...props} isUser={isUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+              </div>
+            }/>
+
+            <Route exact path="/success" component={PaymentSuccessful}/>
+  
+            <Route exact path="/cancel" component={PaymentCancelled}/>
+            
+            <Route path="*" component={PageNotFound}/>
+          </Switch>
+      </div>
+    )
+  }
 }
