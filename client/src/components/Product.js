@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/item.css';
+import '../styles/app.css';
 import CartAddItem from './CartAddItem';
 
 export default function Item({ product, isUser, userCart, setUserCart, guestCart, setGuestCart }) {
@@ -7,10 +7,10 @@ export default function Item({ product, isUser, userCart, setUserCart, guestCart
 
     return (
         <div>
-            <div className="item-container">    
-                <h3 className="item-detail">{product.name}</h3>
-                <img className="item-image item-detail" src={image} alt={product.name}/>
-                <p className="item-detail">${product.price}</p>
+            <div className="product-container">    
+                <h2 style={{ marginBottom: '15px' }}>{product.name}</h2>
+                <img className="product-image" style={{ marginBottom: '15px' }} src={image} alt={product.name}/>
+                <p style={{ marginBottom: '15px' }}>${product.price}</p>
                 <CartAddItem product={product} isUser={isUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
             </div>
         </div>

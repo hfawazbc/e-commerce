@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/app.css';
 import { Redirect } from 'react-router-dom';
 
 export default function Post({ isAdmin }) {

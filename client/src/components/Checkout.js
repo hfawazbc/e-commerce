@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/cart.css';
+import '../styles/app.css';
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
@@ -49,23 +49,16 @@ export default function Checkout({ isUser, userCart, guestCart }) {
 
     if (!isUser) {
         return (
-            <div style={{ width: '30%', margin: 'auto' }}>
-                <div className="guest-checkout-container">
-                    <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
-                        Check out as guest
-                    </button>
-                    <a className="checkout-link" href="/sign-in">Sign in to check out</a>
-                </div>
+            <div>
+                <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>Check out as guest</button>
+                <a className="checkout-link" href="/sign-in">Sign in to check out</a>
+                
             </div>
         )
     } else {
         return (
-            <div style={{ width: '30%', margin: 'auto' }}>
-                <div className="user-checkout-container">
-                    <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>
-                    Checkout
-                    </button>
-                </div>
+            <div>
+                <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>Checkout</button>
             </div>
         )
     }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '../styles/cart.css';
+import '../styles/app.css';
 import CartItem from './CartItem';
 import Checkout from './Checkout';
 
@@ -33,21 +33,16 @@ export default function Cart({ isUser, userCart, setUserCart, guestCart, setGues
 
     return (
         <div>
-            <div style={{ width: '30%', margin: 'auto' }}>
-                <div className="cart-main-container">
-                    <h1 className="cart-primary-header">Your Cart</h1>
-                    {cart.map(cartItem => {
-                        return <CartItem key={cartItem._id} cartItem={cartItem} isUser={isUser} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
-                    })}
-                </div>
-            </div>
-            { cart.length > 0 ? 
-                <div className="cart-checkout">
+            <div className="cart-container">
+                {cart.map(cartItem => {
+                    return <CartItem key={cartItem._id} cartItem={cartItem} isUser={isUser} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+                })}
+                { cart.length > 0 ? 
                     <Checkout isUser={isUser} userCart={userCart} guestCart={guestCart} />
-                </div>
-            :
-                <h2 className="cart-secondary-header">Your cart is empty.</h2>
-            }
+                :
+                    <h1 style={{ textAlign: 'center' }}>Your cart is empty.</h1>
+                }
+            </div>
         </div>
     )
 }

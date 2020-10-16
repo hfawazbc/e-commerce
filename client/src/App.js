@@ -4,7 +4,7 @@ import './styles/app.css';
 import Register from './components/Register';
 import SignIn from './components/SignIn';
 import NavBar from './components/NavBar';
-import ItemList from './components/ItemList';
+import ProductList from './components/ProductList';
 import Cart from './components/Cart';
 import Post from './components/Post';
 import PageNotFound from './components/PageNotFound';
@@ -42,7 +42,7 @@ export default function App() {
             <Route exact path="/" render={(props) =>
               <div>
                 <NavBar isUser={isUser} setIsUser={setIsUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart}/>
-                <ItemList {...props} isUser={isUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+                <ProductList {...props} isUser={isUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
               </div>
             }/>
   

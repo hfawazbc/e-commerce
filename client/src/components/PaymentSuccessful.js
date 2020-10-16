@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import '../styles/app.css';
 
 export default function PaymentSuccessful({ isUser, setUserCart, setGuestCart }) {
     useEffect(() => {
@@ -27,15 +28,10 @@ export default function PaymentSuccessful({ isUser, setUserCart, setGuestCart })
     }, [isUser, setUserCart, setGuestCart])
 
     return (
-        <div style={{ 
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-        }}>
-            <h1>Payment Successful!</h1>
-            <div style={{ textAlign: 'center' }}>
-                <a href="/" style={{ textDecoration: 'none', color: '#03A9F4' }}>Return home</a>
+        <div className="center-component">
+            <h1 style={{ textAlign: 'center' }}>Payment Successful!</h1>
+            <div className="link-container">
+                <a href="/" className="link">Return home</a>
             </div>
         </div>
     )

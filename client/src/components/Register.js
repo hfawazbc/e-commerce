@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/form.css';
+import '../styles/app.css';
 import { Redirect, Route } from 'react-router-dom';
 
 export default function Register({ isUser }) {
@@ -44,19 +44,19 @@ export default function Register({ isUser }) {
         )
     } else if (!isUser) {
         return (
-            <div style={{ width: '30%', margin: 'auto' }}>
-                <div className="main-container">
-                    <h1 className="main-header">Register</h1>
-                    <form className="form-container" onSubmit={(e) => handleSubmit(e)}>
-                        <div className="field-container">
-                            <label className="field" htmlFor="email">Email</label>
-                            <input className="field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+            <div>
+                <div className="form-container">
+                    <h1 className="form-caption">Register</h1>
+                    <form onSubmit={(e) => handleSubmit(e)}>
+                        <div className="form-field-container">
+                            <label className="form-field" htmlFor="email">Email</label>
+                            <input className="form-field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                         </div>
-                        <div className="field-container">
-                            <label className="field" htmlFor="password">Password</label>
-                            <input className="field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <div className="form-field-container">
+                            <label className="form-field" htmlFor="password">Password</label>
+                            <input className="form-field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                         </div>
-                        <button className="submit-btn" type="submit">Register</button>
+                        <button className="form-submit-btn" type="submit">Register</button>
                     </form>
     
                     <div className="link-container">Already have an account? <a className="link" href="/sign-in">Sign in</a></div>

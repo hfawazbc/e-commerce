@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/cartItem.css';
+import '../styles/app.css';
 
 export default function CartRemoveItem({ cartItem, isUser, setUserCart, guestCart, setGuestCart }) {
     const handleUserClick = (e) => {
@@ -43,13 +43,13 @@ export default function CartRemoveItem({ cartItem, isUser, setUserCart, guestCar
     if (!isUser) {
         return (
             <div>
-                <button className="remove-btn" onClick={(e) => handleGuestClick(e)}>Remove from cart</button>
+                <button className="remove-from-cart-btn" onClick={(e) => handleGuestClick(e)}>Remove from cart</button>
             </div>
         )
     } else {
         return (
             <div>
-                <button className="remove-btn" onClick={(e) => handleUserClick(e)}>Remove from cart</button>
+                <button className="remove-from-cart-btn" onClick={(e) => handleUserClick(e)}>Remove from cart</button>
             </div>
         )
     }

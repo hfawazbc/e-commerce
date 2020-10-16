@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/app.css';
 import { Redirect, Route } from 'react-router-dom';
 
 export default function SignOut({ isUser, setIsUser }) {
@@ -29,9 +30,8 @@ export default function SignOut({ isUser, setIsUser }) {
         )
     } else {
         return (
-            <div className="sign-out-container">
+            <div>
                 <button className="sign-out-btn" onClick={(e) => handleClick(e)}>Sign out</button>
-
                 <Route render={ () => { if (!isUser) return <Redirect to="/"/> } }/>
             </div>
         )

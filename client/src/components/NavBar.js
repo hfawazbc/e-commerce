@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import '../styles/navBar.css';
-import shoppingCart from '../icons/shopping-cart.png';
+import '../styles/app.css';
 import SignOut from './SignOut';
 
 export default function NavBar({ isUser, setIsUser, userCart, setUserCart, guestCart }) {
@@ -30,13 +29,18 @@ export default function NavBar({ isUser, setIsUser, userCart, setUserCart, guest
         return (
             <div>
                 <div className="navbar-container">
-                    <a className="navbar-link" href="/"><h3>E-commerce</h3></a>
-                    <SignOut isUser={isUser} setIsUser={setIsUser}/>
-                    <div>
-                        <a className="navbar-cart-container" href="/cart" >
-                            <img className="navbar-cart-image" src={shoppingCart} alt=""/>
-                            <p className="navbar-cart-count">{userCart.length}</p>
-                        </a>
+                    <div className="navbar-home">
+                        <a className="navbar-home-link" href="/"><h1>E-commerce</h1></a>
+                    </div>
+                    <div className="navbar-dropdown">
+                        <button className="navbar-dropdown-btn">Menu</button>
+                        <div className="navbar-dropdown-content">
+                            <a style={{ padding: '5px' }} className="link" href="/post">Post Product</a> 
+                            <SignOut isUser={isUser} setIsUser={setIsUser}/>
+                        </div>
+                    </div>
+                    <div className="link-container">
+                        <a className="link" style={{ padding: '5px' }} href="/cart" >View Cart: {userCart.length}</a>
                     </div>
                 </div>
             </div>
@@ -45,15 +49,18 @@ export default function NavBar({ isUser, setIsUser, userCart, setUserCart, guest
         return (
             <div>
                 <div className="navbar-container">
-                    <a className="navbar-home navbar-link" href="/"><h3>E-commerce</h3></a>
-                    <div className="navbar-session">
-                        <a className="navbar-link" href="/sign-in">Sign in</a> | <a className="navbar-link" href="/register">Register</a>
+                    <div className="navbar-home">
+                        <a className="navbar-home-link" href="/"><h1>E-commerce</h1></a>
                     </div>
-                    <div>
-                        <a className="navbar-cart-container" href="/cart" >
-                            <img className="navbar-cart-image" src={shoppingCart} alt=""/>
-                            <p className="navbar-cart-count">{guestCart.length}</p>
-                        </a>
+                    <div className="navbar-dropdown">
+                        <button className="navbar-dropdown-btn">Menu</button>
+                        <div className="navbar-dropdown-content">
+                            <a style={{ padding: '5px' }} className="link" href="/sign-in">Sign in</a>
+                            <a style={{ padding: '5px' }} className="link" href="/register">Register</a>
+                        </div>
+                    </div>
+                    <div className="link-container">
+                        <a className="link" style={{ padding: '5px' }} href="/cart" >View Cart: {guestCart.length}</a>
                     </div>
                 </div>
             </div>

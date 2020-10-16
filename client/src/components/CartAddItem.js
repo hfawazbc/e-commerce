@@ -1,7 +1,7 @@
 import React from 'react';
-import '../styles/item.css';
+import '../styles/app.css';
 
-export default function CartAddItem({ product, isUser, userCart, setUserCart, guestCart, setGuestCart }) {
+export default function CartAddItem({ product, isUser, setUserCart, guestCart, setGuestCart }) {
     const handleUserClick = (e) => {
         e.preventDefault();
 
@@ -35,24 +35,24 @@ export default function CartAddItem({ product, isUser, userCart, setUserCart, gu
         let cart = guestCart.filter(item => item._id === product._id);
 
         if (cart.length === 0) {
-            cart.push(product);
+            let updatedCart = [...guestCart, product];
 
-            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
 
-            setGuestCart(cart);
+            setGuestCart(updatedCart);
         }
     }
 
     if (!isUser) {
         return (
             <div>
-                <button className="add-btn" onClick={(e) => handleGuestClick(e)}>Add to cart</button>
+                <button className="add-to-cart-btn" onClick={(e) => handleGuestClick(e)}>Add to cart</button>
             </div>
         )
     } else {
         return (
             <div>
-                <button className="add-btn" onClick={(e) => handleUserClick(e)}>Add to cart</button>
+                <button className="add-to-cart-btn" onClick={(e) => handleUserClick(e)}>Add to cart</button>
             </div>
         )
     }

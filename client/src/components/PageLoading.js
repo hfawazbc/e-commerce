@@ -1,14 +1,10 @@
 import React from 'react'
+import '../styles/app.css';
 
 export default function PageLoading() {
     return (
-        <div style={{ 
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-        }}>
-            <h1>Loading...</h1>
+        <div className="center-component">
+            <h1 style={{ textAlign: 'center' }}>Loading...</h1>
         </div>
     )
 }

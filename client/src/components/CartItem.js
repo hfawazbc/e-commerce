@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/cartItem.css';
+import '../styles/app.css';
 import CartRemoveItem from './CartRemoveItem';
 
 export default function CartItem({ cartItem, isUser, setUserCart, guestCart, setGuestCart}) {
@@ -7,10 +7,10 @@ export default function CartItem({ cartItem, isUser, setUserCart, guestCart, set
     
     return (
         <div>
-            <div className="cart-item-container">
-                <h3 className="cart-item-detail">{cartItem.name}</h3>
-                <img className="cart-item-image cart-item-detail" src={image} alt={cartItem.name}/>
-                <p className="cart-item-detail">${cartItem.price}</p>
+            <div className="product-container">
+                <h2 style={{ marginBottom: '15px' }}>{cartItem.name}</h2>
+                <img className="product-image" style={{ marginBottom: '15px' }} src={image} alt={cartItem.name}/>
+                <p style={{ marginBottom: '15px' }}>${cartItem.price}</p>
                 <CartRemoveItem cartItem={cartItem} isUser={isUser} setUserCart={ setUserCart } guestCart={guestCart} setGuestCart={setGuestCart}/>
             </div>
         </div>

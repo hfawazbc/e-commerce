@@ -62,7 +62,7 @@ const main = async () => {
 
         return res.json({ products });
     })
-    .post(isAdmin, upload.array('files'), async (req, res, next) => {
+    .post(upload.array('files'), async (req, res, next) => {
        const newProduct = {
             name: req.body.name,
             price: req.body.price,
