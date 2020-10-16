@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import '../styles/form.css';
 import { Redirect, Route } from 'react-router-dom';
 
-export default function SignIn({ isUser, setIsUser }) {
+export default function SignIn({ isUser, setIsUser, setUserCart, guestCart, setGuestCart }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const fetchSignIn = async () => {
@@ -35,7 +35,32 @@ export default function SignIn({ isUser, setIsUser }) {
             }
         }
 
-        fetchSignIn();
+        await fetchSignIn();
+
+        const fetchCart = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/users/user/merge-cart', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ guestCart }),
+                    credentials: 'include'
+                })
+                
+                const data = await response.json();
+
+                setUserCart(data.cart);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        await fetchCart();
+
+        localStorage.clear();
+    
+        setGuestCart([]);
     }
 
     if (isUser) {

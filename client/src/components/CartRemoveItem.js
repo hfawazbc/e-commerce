@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/cartItem.css';
 
-export default function CartRemoveItem({ cartItem, isUser, setUserCart, setGuestCart }) {
+export default function CartRemoveItem({ cartItem, isUser, setUserCart, guestCart, setGuestCart }) {
     const handleUserClick = (e) => {
         e.preventDefault();
 
@@ -32,13 +32,11 @@ export default function CartRemoveItem({ cartItem, isUser, setUserCart, setGuest
     const handleGuestClick = (e) => {
         e.preventDefault();
 
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cart = guestCart.filter(item => item._id !== cartItem._id);
 
-        let newCart = cart.filter(item => item._id !== cartItem._id);
+        localStorage.setItem('cart', JSON.stringify(cart));
 
-        localStorage.setItem('cart', JSON.stringify(newCart));
-
-        setGuestCart(newCart);
+        setGuestCart(cart);
     }
 
 

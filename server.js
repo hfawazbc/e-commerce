@@ -148,6 +148,22 @@ const main = async () => {
     })
 
     app
+    .route('/users/user/empty-cart')
+    .get(isAuth, async (req, res, next) => {
+        let cart = await emptyUserCart(client, req.user._id);
+
+        return res.json({ cart });
+    })
+
+    app
+    .route('/users/user/merge-cart')
+    .put(isAuth, async (req, res, next) => {
+        let cart = await mergeUserCart(client, req.user._id, req.body.guestCart);
+
+        return res.json({ cart });
+    })
+
+    app
     .route('/users/user/cart/checkout-session')
     .post(async (req, res, next) => {
         let sessionId = await checkoutUserCartProducts(client, req.body.cartType, req.body.cartData);
@@ -219,10 +235,33 @@ const checkoutUserCartProducts = async (client, cartType, cartData) => {
     return session.id;
 }
 
+const emptyUserCart = async (client, userId) => {
+    await client.db("projectDB").collection("users").updateOne({ _id: userId  }, { $set: { cart: [] } });
+
+    const user = await client.db("projectDB").collection("users").findOne({ _id: userId });
+
+    return user.cart;
+}
+
+const mergeUserCart = async (client, userId, guestCart) => {
+    const mergeCart = guestCart.map(product => {
+        return {
+            ...product,
+            _id: ObjectId(product._id)
+        }
+    })
+
+    await client.db("projectDB").collection("users").updateOne({ _id: userId  }, { $addToSet: { cart: { $each: mergeCart } } });
+
+    const user = await client.db("projectDB").collection("users").findOne({ _id: userId });
+
+    return user.cart;
+}
+
 const removeProductFromUserCart = async (client, itemId, userId) => {
     const product = await client.db("projectDB").collection("products").findOne({ _id: new ObjectId(itemId) });
 
-    await client.db("projectDB").collection("users").updateOne({ _id: userId }, { $pull: { cart: product } });
+    await client.db("projectDB").collection("users").updateOne({ _id: userId }, { $pull: { cart: { _id: product._id } } });
 
     const user = await client.db("projectDB").collection("users").findOne({ _id: userId });
 

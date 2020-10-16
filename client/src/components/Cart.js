@@ -37,7 +37,7 @@ export default function Cart({ isUser, userCart, setUserCart, guestCart, setGues
                 <div className="cart-main-container">
                     <h1 className="cart-primary-header">Your Cart</h1>
                     {cart.map(cartItem => {
-                        return <CartItem key={cartItem._id} cartItem={cartItem} isUser={isUser} setUserCart={setUserCart} setGuestCart={setGuestCart}/>
+                        return <CartItem key={cartItem._id} cartItem={cartItem} isUser={isUser} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
                     })}
                 </div>
             </div>

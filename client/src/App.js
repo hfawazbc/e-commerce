@@ -35,7 +35,7 @@ export default function App() {
           <Switch>
             <Route exact path="/register" render={(props) => <Register {...props} isUser={isUser}/>}/>
   
-            <Route exact path="/sign-in" render={(props) => <SignIn {...props} isUser={isUser} setIsUser={setIsUser}/>}/>
+            <Route exact path="/sign-in" render={(props) => <SignIn {...props} isUser={isUser} setIsUser={setIsUser} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>}/>
   
             <Route exact path="/post" render={(props) => <Post {...props} isAdmin={isAdmin}/>}/>
   
@@ -53,7 +53,11 @@ export default function App() {
               </div>
             }/>
 
-            <Route exact path="/payment-successful" component={PaymentSuccessful}/>
+            <Route exact path="/payment-successful" render={(props) => 
+              <div>
+                <PaymentSuccessful isUser={isUser} setUserCart={setUserCart} setGuestCart={setGuestCart}/>
+              </div>
+            }/>
   
             <Route exact path="/payment-cancelled" component={PaymentCancelled}/>
             

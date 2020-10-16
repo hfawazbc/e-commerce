@@ -32,26 +32,14 @@ export default function CartAddItem({ product, isUser, userCart, setUserCart, gu
     const handleGuestClick = (e) => {
         e.preventDefault();
 
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cart = guestCart.filter(item => item._id === product._id);
 
-        let filterCart = cart.filter(item => item._id === product._id);
-
-        if (filterCart.length === 0) {
-            let item = {
-                _id: product._id,
-                name: product.name,
-                price: product.price,
-                images: product.images,
-                quantity: 1
-            }
-
-            cart.push(item);
+        if (cart.length === 0) {
+            cart.push(product);
 
             localStorage.setItem('cart', JSON.stringify(cart));
 
             setGuestCart(cart);
-        } else {
-            alert('Item is already in cart.');
         }
     }
 
