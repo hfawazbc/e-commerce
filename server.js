@@ -218,8 +218,8 @@ const checkoutUser = async (client, cart) => {
         payment_method_types: ["card"],
         line_items: items,
         mode: "payment",
-        success_url: "payment-successful",
-        cancel_url: "payment-cancelled",
+        success_url: "https://hf-e-commerce.herokuapp.com/payment-successful",
+        cancel_url: "https://hf-e-commerce.herokuapp.com/payment-cancelled",
     });
 
     return session.id;
@@ -247,8 +247,8 @@ const checkoutGuest = async (cart) => {
         payment_method_types: ["card"],
         line_items: items,
         mode: "payment",
-        success_url: "payment-successful",
-        cancel_url: "payment-cancelled",
+        success_url: "https://hf-e-commerce.herokuapp.com/payment-successful",
+        cancel_url: "https://hf-e-commerce.herokuapp.com/payment-cancelled",
     });
 
     return session.id;
