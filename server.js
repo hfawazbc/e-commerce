@@ -8,6 +8,7 @@ const passport = require('passport');
 const { Strategy } = require('passport-local');
 const encryption = require('./config/encryption');
 const { isAuth } = require('./middleware/authRoutes');
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // ----- SERVER + DATABASE ----- //
