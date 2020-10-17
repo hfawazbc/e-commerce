@@ -7,7 +7,7 @@ export default function CartAddProductUser({ product, setUserCart }) {
 
         const fetchCart = async () => {
             try {
-                const response = await fetch('http://localhost:5000/users/user/cart/add-item', {
+                const response = await fetch('/users/user/cart/add-item', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

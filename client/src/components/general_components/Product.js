@@ -4,7 +4,7 @@ import CartAddProductGuest from '../guest_components/CartAddProductGuest';
 import CartAddProductUser from '../user_components/CartAddProductUser';
 
 export default function Product({ product, user, setUserCart, guestCart, setGuestCart }) {
-    const image = `http://localhost:5000/files/${product.images[0].filename}`;
+    const image = `/files/${product.images[0].filename}`;
 
     const renderCartAddProduct = () => {
       if (!user.isAuth) {

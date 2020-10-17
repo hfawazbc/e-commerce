@@ -10,7 +10,7 @@ export default function SignIn({ setUser, setUserCart, guestCart, setGuestCart }
 
         const fetchSignIn = async () => {
             try {
-                const response = await fetch('http://localhost:5000/users/sign-in', {
+                const response = await fetch('/users/sign-in', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
