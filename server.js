@@ -9,7 +9,6 @@ const { Strategy } = require('passport-local');
 const upload = require('./config/multer');
 const encryption = require('./config/encryption');
 const { isAuth } = require('./middleware/authRoutes');
-const { isAdmin } = require('./middleware/authRoutes');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // ----- SERVER + DATABASE ----- //
@@ -80,7 +79,7 @@ const main = async () => {
     app
     .route('/users/register')
     .post(async (req, res, next) => {
-        let createdUser = await createUser(client, req.body.email, req.body.password);
+        const createdUser = await createUser(client, req.body.email, req.body.password);
 
         if (!createdUser) return res.json({ message: 'A user with this email already exists.', isRegistered: false });
         
@@ -93,12 +92,12 @@ const main = async () => {
         passport.authenticate('local', (error, user) => {
             if (error) return next(error); 
     
-            if (!user) return res.json({ message: 'Email or password is incorrect.', isSignedIn: false });
-    
-            req.logIn(user, (error) => {
+            if (!user) return res.json({ message: 'Email or password is incorrect.', isAuth: false, isAdmin: false });
+
+            req.logIn(user, async (error) => {
                 if (error) return next(error); 
     
-                return res.json({ isSignedIn: true });
+                return res.json({ isAuth: true, isAdmin: user.admin });
             });
         })(req, res, next)
     })
@@ -113,14 +112,8 @@ const main = async () => {
 
     app
     .route('/users/user')
-    .get(isAuth, (req, res, next) => {
-        return res.json({ isAuth: true });
-    })
-
-    app
-    .route('/users/admin')
-    .get(isAdmin, (req, res, next) => {
-        return res.json({ isAdmin: true });
+    .get(isAuth, async (req, res, next) => {
+        return res.json({ isAuth: true, isAdmin: req.user.admin });
     })
 
     app
@@ -134,7 +127,7 @@ const main = async () => {
     app
     .route('/users/user/cart/add-item')
     .put(isAuth, async (req, res, next) => {
-        const cart = await addProductToUserCart(client, req.body.itemId, req.user._id);
+        const cart = await addProductToUserCart(client, req.body.productId, req.user._id);
 
         return res.json({ cart });
     })
@@ -142,7 +135,7 @@ const main = async () => {
     app
     .route('/users/user/cart/remove-item')
     .put(isAuth, async (req, res, next) => {
-        let cart = await removeProductFromUserCart(client, req.body.itemId, req.user._id);
+        const cart = await removeProductFromUserCart(client, req.body.productId, req.user._id);
 
         return res.json({ cart });
     })
@@ -150,7 +143,7 @@ const main = async () => {
     app
     .route('/users/user/empty-cart')
     .get(isAuth, async (req, res, next) => {
-        let cart = await emptyUserCart(client, req.user._id);
+        const cart = await emptyUserCart(client, req.user._id);
 
         return res.json({ cart });
     })
@@ -158,15 +151,23 @@ const main = async () => {
     app
     .route('/users/user/merge-cart')
     .put(isAuth, async (req, res, next) => {
-        let cart = await mergeUserCart(client, req.user._id, req.body.guestCart);
+        const cart = await mergeUserCart(client, req.user._id, req.body.guestCart);
 
         return res.json({ cart });
     })
 
     app
-    .route('/users/user/cart/checkout-session')
+    .route('/users/user/cart/checkout-guest-session')
     .post(async (req, res, next) => {
-        let sessionId = await checkoutUserCartProducts(client, req.body.cartType, req.body.cartData);
+        const sessionId = await checkoutGuest(req.body.guestCart);
+
+        return res.json({ sessionId });
+    })
+
+    app
+    .route('/users/user/cart/checkout-user-session')
+    .post(async (req, res, next) => {
+        const sessionId = await checkoutUser(client, req.body.userCart);
 
         return res.json({ sessionId });
     })
@@ -181,48 +182,58 @@ main();
 
 // ----- DATABASE FUNCTIONS ----- //
 
-const checkoutUserCartProducts = async (client, cartType, cartData) => {
+const checkoutUser = async (client, cart) => {
     let items = [];
 
-    if (cartType === 'guest') {
-        cartData.forEach(cartItem => {
-            let item = {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                        name: cartItem.name
-                    },
-                    unit_amount: cartItem.price * 100
+    const productIds = cart.map(product => { return ObjectId(product._id) })
+
+    const cursor = await client.db("projectDB").collection("products").find({ _id: { $in: productIds } });
+
+    const products = await cursor.toArray();
+
+    products.forEach(product => {
+        let item = {
+            price_data: {
+                currency: "usd",
+                product_data: {
+                    name: product.name
                 },
-                quantity: cartItem.quantity,
-            }
-    
-            items.push(item);
-        })
-    }
+                unit_amount: product.price * 100
+            },
+            quantity: 1
+        }
 
-    if (cartType === 'user') {
-        const cartItemIds = cartData.map(cartItem => { return ObjectId(cartItem._id) })
+        items.push(item);
+    })
 
-        const cursor = await client.db("projectDB").collection("products").find({ _id: { $in: cartItemIds } });
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: items,
+        mode: "payment",
+        success_url: "http://localhost:3000/payment-successful",
+        cancel_url: "http://localhost:3000/payment-cancelled",
+    });
 
-        const products = await cursor.toArray();
+    return session.id;
+}
 
-        products.forEach(product => {
-            let item = {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                        name: product.name
-                    },
-                    unit_amount: product.price * 100
+const checkoutGuest = async (cart) => {
+    let items = [];
+
+    cart.forEach(product => {
+        let item = {
+            price_data: {
+                currency: "usd",
+                product_data: {
+                    name: product.name
                 },
-                quantity: 1
-            }
+                unit_amount: product.price * 100
+            },
+            quantity: 1,
+        }
 
-            items.push(item);
-        })
-    }
+        items.push(item);
+    })
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -258,8 +269,8 @@ const mergeUserCart = async (client, userId, guestCart) => {
     return user.cart;
 }
 
-const removeProductFromUserCart = async (client, itemId, userId) => {
-    const product = await client.db("projectDB").collection("products").findOne({ _id: new ObjectId(itemId) });
+const removeProductFromUserCart = async (client, productId, userId) => {
+    const product = await client.db("projectDB").collection("products").findOne({ _id: new ObjectId(productId) });
 
     await client.db("projectDB").collection("users").updateOne({ _id: userId }, { $pull: { cart: { _id: product._id } } });
 
@@ -268,8 +279,8 @@ const removeProductFromUserCart = async (client, itemId, userId) => {
     return user.cart;
 }
 
-const addProductToUserCart = async (client, itemId, userId) => {
-    const product = await client.db("projectDB").collection("products").findOne({ _id: new ObjectId(itemId) });
+const addProductToUserCart = async (client, productId, userId) => {
+    const product = await client.db("projectDB").collection("products").findOne({ _id: new ObjectId(productId) });
 
     await client.db("projectDB").collection("users").updateOne({ _id: userId }, { $addToSet: { cart: product } });
 
@@ -299,6 +310,7 @@ const createUser = async (client, email, password) => {
             email,
             hash,
             salt,
+            admin: false,
             cart: [],
             wishlist: [],
             purchased: []

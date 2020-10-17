@@ -1,0 +1,31 @@
+import React from 'react';
+import '../../styles/app.css';
+import CartRemoveProductGuest from '../guest_components/CartRemoveProductGuest';
+import CartRemoveProductUser from '../user_components/CartRemoveProductUser';
+
+export default function CartProduct({ user, product, setUserCart, guestCart, setGuestCart}) {
+    const image = `http://localhost:5000/files/${product.images[0].filename}`;
+    
+    const renderCartRemoveProduct = () => {
+        if (!user.isAuth) {
+            return (
+                <CartRemoveProductGuest product={product} guestCart={guestCart} setGuestCart={setGuestCart}/>
+            )
+        } else {
+            return (
+                <CartRemoveProductUser product={product} setUserCart={setUserCart}/>
+            )
+        }
+    }
+
+    return (
+        <div>
+            <div className="product-container">
+                <h2 style={{ marginBottom: '15px' }}>{product.name}</h2>
+                <img className="product-image" style={{ marginBottom: '15px' }} src={image} alt={product.name}/>
+                <p style={{ marginBottom: '15px' }}>${product.price}</p>
+                {renderCartRemoveProduct()}
+            </div>
+        </div>
+    )
+}

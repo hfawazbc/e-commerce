@@ -7,6 +7,25 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.component-size {
+    width: 100vw;
+    height: 100vh;
+}
+
+.component-padding {
+    padding-top: 15vh;
+    padding-bottom: 15vh;
+    padding-left: 30vw;
+    padding-right: 30vw;
+}
+
+.component-position {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .link-container {
     text-align: center;
 }
@@ -14,49 +33,39 @@ body {
 .link {
     display: block;
     text-decoration: none;
-    color: #000;
+    color: black;
+    padding: 5px;
 }
 
 .link:hover {
-    background-color: #eeeeee;
-}
-
-.center-component {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    background-color: black;
+    color: white;
 }
 
 .form-container {
-    padding: 25px;
-    margin-top: 100px;
-    background-color: #eeeeee;
+    padding: 2.5vmin;
+    border: solid 1px black;
+    border-radius: 2.5px;
 }
 
 .form-caption {
     text-align: center;
-    margin-bottom: 25px;
-}
-
-.form-field-container {
-    display: grid;
-    margin-bottom: 25px;
+    margin-bottom: 5vh;
 }
 
 .form-field {
-    margin-bottom: 10px;
+    width: 100%;
+    margin-bottom: 5vh;
 }
 
-input[type="email"], input[type="password"] {
+input[type="email"], input[type="password"], input[type="text"], input[type="number"] {
     padding: 5px;
     box-sizing: border-box;
 }
 
 .form-submit-btn {
-    padding: 5px;
-    margin-bottom: 25px;
     width: 100%;
+    padding: 5px;
     border: none;
     background-color: #8BC34A;
     cursor: pointer;
@@ -64,7 +73,7 @@ input[type="email"], input[type="password"] {
 
 .cart-container {
     padding: 25px;
-    background-color: #eeeeee;
+    background-color: whitesmoke;
 }
 
 .checkout-btn {
@@ -72,7 +81,6 @@ input[type="email"], input[type="password"] {
     font-size: 1em;
     width: 100%;
     padding: 5px;
-    margin-bottom: 25px;
     background-color: #03A9F4;
     cursor: pointer;
 }
@@ -118,12 +126,12 @@ input[type="email"], input[type="password"] {
     grid-template-columns: repeat(3, 1fr);
     column-gap: 25px;
     padding: 25px;
-    background-color: #eeeeee;
+    background-color: whitesmoke;
 }
 
 .navbar-container {
     display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
+    grid-template-columns: 6fr 1fr 1fr;
     padding: 50px;
     align-items: center;
     background-color: white;
@@ -135,7 +143,18 @@ input[type="email"], input[type="password"] {
 
 .navbar-home-link {
     text-decoration: none;
-    color: #000;
+    color: black;
+}
+
+.navbar-cart-link {
+    display: bloc;
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+}
+
+.navbar-cart-link:hover {
+    background-color: whitesmoke;
 }
 
 .navbar-dropdown {
@@ -144,11 +163,12 @@ input[type="email"], input[type="password"] {
 }
 
 .navbar-dropdown-btn {
+    text-align: left;
     border: none;
     width: 100%;
     padding: 5px;
     font-size: 1em;
-    background-color: #fff;
+    background-color: white;
     cursor: auto;
 }
 
@@ -156,12 +176,11 @@ input[type="email"], input[type="password"] {
     display: none;
     position: absolute;
     width: 100%;
-    text-align: center;
 }
 
 .navbar-dropdown-content a:hover {
-    background-color: #000;
-    color: #fff;
+    background-color: black;
+    color: white;
 }
 
 .navbar-dropdown:hover .navbar-dropdown-content {
@@ -169,23 +188,24 @@ input[type="email"], input[type="password"] {
 }
 
 .navbar-dropdown:hover .navbar-dropdown-btn {
-    background-color: #eeeeee;
+    background-color: whitesmoke;
 }
 
 .navbar-cart-selection:hover {
-    background-color: #eeeeee;
+    background-color: whitesmoke;
 }
 
 .sign-out-btn {
+    text-align: left;
     font-size: 1em;
     width: 100%;
     padding: 5px;
     border: none;
-    background-color: #eeeeee;
+    background-color: white;
     cursor: pointer;
 }
 
 .sign-out-btn:hover {
-    background-color: #000;
-    color: #fff;
+    background-color: black;
+    color: white;
 }

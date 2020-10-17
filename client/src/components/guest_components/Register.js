@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import '../styles/app.css';
+import '../../styles/app.css';
 import { Redirect, Route } from 'react-router-dom';
 
-export default function Register({ isUser }) {
+export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [registered, setRegistered] = useState(false);
@@ -38,32 +38,22 @@ export default function Register({ isUser }) {
         fetchRegister();
     }
 
-    if (isUser) {
-        return (
-            <Redirect to="/"/>
-        )
-    } else if (!isUser) {
-        return (
-            <div>
+    return (
+        <div className="component-size">
+            <div className="component-padding">
                 <div className="form-container">
-                    <h1 className="form-caption">Register</h1>
+                    <h2 className="form-caption">Register</h2>
                     <form onSubmit={(e) => handleSubmit(e)}>
-                        <div className="form-field-container">
-                            <label className="form-field" htmlFor="email">Email</label>
-                            <input className="form-field" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                        </div>
-                        <div className="form-field-container">
-                            <label className="form-field" htmlFor="password">Password</label>
-                            <input className="form-field" id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                        </div>
+                        <label htmlFor="email">Email</label>
+                        <input className="form-field" id="email" type="email" value={email} autoComplete="off" onChange={(e) => setEmail(e.target.value)}/>
+                        <label htmlFor="password">Password</label>
+                        <input className="form-field" id="password" type="password" value={password} autoComplete="off" onChange={(e) => setPassword(e.target.value)}/>
                         <button className="form-submit-btn" type="submit">Register</button>
                     </form>
-    
                     <div className="link-container">Already have an account? <a className="link" href="/sign-in">Sign in</a></div>
-    
                     <Route render={ () => { if (registered === true) return <Redirect to="/sign-in"/> } }/>
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }

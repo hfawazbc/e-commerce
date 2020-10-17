@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/app.css';
-import Product from './Product';
+import '../../styles/app.css';
+import Product from '../general_components/Product';
 
-export default function ProductList({ isUser, userCart, setUserCart, guestCart, setGuestCart }) {
+export default function ProductList({ user, setUserCart, guestCart, setGuestCart }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ export default function ProductList({ isUser, userCart, setUserCart, guestCart, 
         <div>
             <div className="product-list-container">
                 {products.map((product) => {
-                    return <Product key={product._id} product={product} isUser={isUser} userCart={userCart} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+                    return <Product key={product._id} user={user} product={product} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
                 })}
             </div>
         </div>
