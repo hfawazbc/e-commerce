@@ -6,7 +6,6 @@ const { MongoClient, GridFSBucket, ObjectId } = require('mongodb');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require('passport');
 const { Strategy } = require('passport-local');
-const upload = require('./config/multer');
 const encryption = require('./config/encryption');
 const { isAuth } = require('./middleware/authRoutes');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -47,6 +46,8 @@ const main = async () => {
     app.use(passport.initialize());
     
     app.use(passport.session());
+
+    const upload = require('./config/multer');
 
     // ----- ROUTES ----- //
 
