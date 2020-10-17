@@ -7,7 +7,7 @@ export default function SignOut({ setUser }) {
 
         const fetchSignOut = async () => {
             try {
-                const response = await fetch('/users/sign-out', {
+                const response = await fetch('users/sign-out', {
                     method: 'DELETE',
                     credentials: 'include'
                 })

@@ -12,7 +12,7 @@ export default function Register() {
         
         const fetchRegister = async () => {
             try {
-                const response = await fetch('/users/register', {
+                const response = await fetch('users/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

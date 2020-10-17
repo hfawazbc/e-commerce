@@ -12,7 +12,7 @@ export default function CheckoutGuest({ guestCart }) {
 
         const fetchCheckoutSession = async () => {
             try {
-                const response = await fetch('/users/user/cart/checkout-guest-session', {
+                const response = await fetch('users/user/cart/checkout-guest-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

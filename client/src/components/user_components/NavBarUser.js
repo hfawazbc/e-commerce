@@ -6,7 +6,7 @@ export default function NavBarUser({ setUser, userCart, setUserCart }) {
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                const response = await fetch('/users/user/cart', {
+                const response = await fetch('users/user/cart', {
                     method: 'GET',
                     credentials: 'include'
                 })

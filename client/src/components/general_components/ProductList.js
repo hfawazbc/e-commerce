@@ -10,7 +10,7 @@ export default function ProductList({ user, setUserCart, guestCart, setGuestCart
         
         const fetchProducts = async () => {
             try {
-                const response = await fetch('/products', {
+                const response = await fetch('products', {
                     method: 'GET',
                     credentials: 'include',
                     signal: abortController.signal

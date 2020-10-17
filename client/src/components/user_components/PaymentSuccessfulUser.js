@@ -5,7 +5,7 @@ export default function PaymentSuccessfulUser({ setUserCart }) {
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                const response = await fetch('/users/user/empty-cart', {
+                const response = await fetch('users/user/empty-cart', {
                     method: 'GET',
                     credentials: 'include'
                 })

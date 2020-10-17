@@ -7,7 +7,7 @@ export default function CartRemoveProductUser({ product, setUserCart }) {
 
         const fetchCart = async () => {
             try {
-                const response = await fetch('/users/user/cart/remove-item', {
+                const response = await fetch('users/user/cart/remove-item', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

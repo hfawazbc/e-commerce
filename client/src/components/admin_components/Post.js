@@ -23,7 +23,7 @@ export default function Post() {
 
         const fetchProduct = async () => {
             try {
-                const response = await fetch('/products', {
+                const response = await fetch('products', {
                     method: 'POST',
                     body: formData
                 })
