@@ -2,6 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "proxy": "http://localhost:3000",
   "main": "server.js",
   "dependencies": {
     "connect-mongodb-session": "^2.4.1",

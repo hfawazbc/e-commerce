@@ -170,7 +170,7 @@ const main = async () => {
     })
 
     // ----- PRODUCTION ----- //
-    
+
     if (process.env.NODE_ENV === 'production') {
         app.use(express.static('client/build'));
 
@@ -218,8 +218,8 @@ const checkoutUser = async (client, cart) => {
         payment_method_types: ["card"],
         line_items: items,
         mode: "payment",
-        success_url: "http://localhost:3000/payment-successful",
-        cancel_url: "http://localhost:3000/payment-cancelled",
+        success_url: "payment-successful",
+        cancel_url: "payment-cancelled",
     });
 
     return session.id;
@@ -247,8 +247,8 @@ const checkoutGuest = async (cart) => {
         payment_method_types: ["card"],
         line_items: items,
         mode: "payment",
-        success_url: "http://localhost:3000/payment-successful",
-        cancel_url: "http://localhost:3000/payment-cancelled",
+        success_url: "payment-successful",
+        cancel_url: "payment-cancelled",
     });
 
     return session.id;

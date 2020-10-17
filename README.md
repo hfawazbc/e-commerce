@@ -9,6 +9,7 @@
 
 ## Description
 E-commerce is an application for viewing and purchasing items online either as a guest or a registered user.
+Visit site: https://hf-e-commerce.herokuapp.com/
 
 ## Technologies
 - HTML5
