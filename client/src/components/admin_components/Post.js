@@ -54,6 +54,9 @@ export default function Post() {
                             <input id="files" className="form-field" type="file" accept="image/png, image/jpeg" multiple required/>
                             <button className="form-submit-btn" type="submit">Submit</button>
                         </form>
+                        <div className="link-container">
+                            <a className="link" href="/">Return home</a>
+                        </div>
                     </div>
                 </div>
             </div>

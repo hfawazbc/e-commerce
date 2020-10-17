@@ -33,13 +33,8 @@ body {
 .link {
     display: block;
     text-decoration: none;
-    color: black;
+    color: #03A9F4;
     padding: 5px;
-}
-
-.link:hover {
-    background-color: black;
-    color: white;
 }
 
 .form-container {
@@ -50,12 +45,12 @@ body {
 
 .form-caption {
     text-align: center;
-    margin-bottom: 5vh;
+    margin-bottom: 2.5vh;
 }
 
 .form-field {
     width: 100%;
-    margin-bottom: 5vh;
+    margin-bottom: 2.5vh;
 }
 
 input[type="email"], input[type="password"], input[type="text"], input[type="number"] {
@@ -64,7 +59,9 @@ input[type="email"], input[type="password"], input[type="text"], input[type="num
 }
 
 .form-submit-btn {
+    font-size: 1em;
     width: 100%;
+    margin-bottom: 2.5vh;
     padding: 5px;
     border: none;
     background-color: #8BC34A;
@@ -94,6 +91,12 @@ input[type="email"], input[type="password"], input[type="text"], input[type="num
     padding: 5px;
 }
 
+.checkout-guest-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 25px;
+}
+
 .remove-from-cart-btn {
     border: none;
     padding: 5px;
@@ -110,8 +113,8 @@ input[type="email"], input[type="password"], input[type="text"], input[type="num
 
 .product-container {
     padding: 25px;
-    margin-bottom: 25px;
     background-color: white;
+    margin-bottom: 25px;
 }
 
 .product-image {
@@ -125,7 +128,9 @@ input[type="email"], input[type="password"], input[type="text"], input[type="num
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     column-gap: 25px;
-    padding: 25px;
+    padding-top: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
     background-color: whitesmoke;
 }
 
@@ -208,4 +213,28 @@ input[type="email"], input[type="password"], input[type="text"], input[type="num
 .sign-out-btn:hover {
     background-color: black;
     color: white;
+}
+
+@media (max-width: 600px) {
+    .product-list-container {
+        display: grid;
+        grid-template-columns: none;
+    }
+
+    .navbar-container {
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+    .product-list-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .navbar-container {
+        display: grid;
+        grid-template-columns: 4fr 1fr 1fr;
+    }
 }

@@ -21,7 +21,7 @@ export default function Product({ product, user, setUserCart, guestCart, setGues
     return (
         <div>
             <div className="product-container">    
-                <h2 style={{ marginBottom: '15px' }}>{product.name}</h2>
+                <h3 style={{ marginBottom: '15px' }}>{product.name}</h3>
                 <img className="product-image" style={{ marginBottom: '15px' }} src={image} alt={product.name}/>
                 <p style={{ marginBottom: '15px' }}>${product.price}</p>
                 {renderCartAddProduct()}

@@ -30,7 +30,7 @@ export default function CartUser({ user, userCart, setUserCart }) {
                 {userCart.map(product => {
                     return <CartProduct key={product._id} user={user} product={product} setUserCart={setUserCart}/>
                 })}
-                {userCart.length > 0 ? <CheckoutUser userCart={userCart}/> : <h1 style={{ textAlign: 'center' }}>Your cart is empty.</h1>}
+                {userCart.length > 0 ? <CheckoutUser userCart={userCart}/> : <h3 style={{ textAlign: 'center' }}>Your cart is empty.</h3>}
             </div>
         </div>
     )

@@ -23,7 +23,7 @@ export default function PaymentSuccessfulUser({ setUserCart }) {
 
     return (
         <div className="component-position">
-            <h1 style={{ textAlign: 'center' }}>Payment Successful!</h1>
+            <h2 style={{ textAlign: 'center' }}>Payment Successful!</h2>
             <div className="link-container">
                 <a href="/" className="link">Return home</a>
             </div>

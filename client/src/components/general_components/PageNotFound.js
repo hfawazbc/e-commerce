@@ -4,7 +4,7 @@ import '../../styles/app.css';
 export default function PageNotFound() {
     return (
         <div className="component-position">
-            <h1 style={{ textAlign: 'center' }}>404 Not Found</h1>
+            <h2 style={{ textAlign: 'center' }}>404 Not Found</h2>
             <div className="link-container">
                 <a href="/" className="link">Return home</a>
             </div>

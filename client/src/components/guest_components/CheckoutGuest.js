@@ -37,8 +37,10 @@ export default function CheckoutGuest({ guestCart }) {
 
     return (
         <div>
-            <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>Check out as guest</button>
-            <a className="checkout-link" href="/sign-in">Sign in to check out</a>
+            <div className="checkout-guest-container">
+                <button className="checkout-btn" role="link" onClick={(e) => handleClick(e)}>Check out as guest</button>
+                <a className="checkout-link" href="/sign-in">Sign in to check out</a>
+            </div>
         </div>
     )
 }

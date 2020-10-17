@@ -27,7 +27,7 @@ export default function NavBarUser({ setUser, userCart, setUserCart }) {
         <div>
             <div className="navbar-container">
                 <div className="navbar-home">
-                    <a className="navbar-home-link" href="/"><h1>E-commerce</h1></a>
+                    <a className="navbar-home-link" href="/"><h2>E-commerce</h2></a>
                 </div>
                 <div className="navbar-dropdown">
                     <button className="navbar-dropdown-btn">Panel</button>
@@ -35,7 +35,7 @@ export default function NavBarUser({ setUser, userCart, setUserCart }) {
                         <SignOut setUser={setUser}/>
                     </div>
                 </div>
-                <a className="navbar-cart-link" href="/cart">View Cart: {userCart.length}</a>
+                <a className="navbar-cart-link" href="/cart">Cart: {userCart.length}</a>
             </div>
         </div>
     )
