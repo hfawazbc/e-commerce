@@ -30,7 +30,7 @@ export default function App() {
       
       const fetchUser = async () => {
           try {
-              const response = await fetch('/users/user', {
+              const response = await fetch('users/user', {
                   method: 'GET',
                   credentials: 'include',
                   signal: abortController.signal

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const cors = require('cors');
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const { MongoClient, GridFSBucket, ObjectId } = require('mongodb');
@@ -32,8 +33,6 @@ const main = async () => {
 
     app.use(express.urlencoded({ extended: false }));
 
-    if (process.env.NODE_ENV === 'production') app.use(express.static('client/build'));
-
     app.use(session({
         secret: process.env.SESSION_SECRET_KEY,
         store: new MongoDBStore({ uri: process.env.URI, collection: 'sessions' }),
@@ -49,8 +48,6 @@ const main = async () => {
     app.use(passport.session());
 
     // ----- ROUTES ----- //
-
-    app.get("/", (req, res, next) => { return res.send("Welcome!") });
 
     app.get('/files/:filename', (req, res, next) => { bucket.openDownloadStreamByName(req.params.filename).pipe(res) });
 
@@ -172,9 +169,20 @@ const main = async () => {
         return res.json({ sessionId });
     })
 
+    // ----- PRODUCTION ----- //
+    
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static('client/build'));
+
+        app.get('*', (req, res, next) => {
+            res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+        })
+    }
+
     // ----- PORT ----- //
 
     const port = process.env.PORT || 5000;
+
     app.listen(port, () => console.log(`Server started at http://localhost:${port}`));
 }
 
