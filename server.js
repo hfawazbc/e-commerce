@@ -8,7 +8,7 @@ const passport = require('passport');
 const { Strategy } = require('passport-local');
 const encryption = require('./config/encryption');
 const { isAuth } = require('./middleware/authRoutes');
-
+const upload = require('./config/multer');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // ----- SERVER + DATABASE ----- //
@@ -48,7 +48,7 @@ const main = async () => {
     
     app.use(passport.session());
 
-    const upload = require('./config/multer');
+    /* const upload = require('./config/multer'); */
 
     // ----- ROUTES ----- //
 
