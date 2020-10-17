@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../../styles/app.css';
 
-export default function SignIn({ setUser, setUserCart, guestCart, setGuestCart }) {
+export default function SignIn({ user, setUser, setUserCart, guestCart, setGuestCart }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 

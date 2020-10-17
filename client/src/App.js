@@ -96,7 +96,7 @@ export default function App() {
             }/>
   
             <Route exact path="/sign-in" render={props => 
-              user.isAuth ? <Redirect to="/"/> : <SignIn {...props} setUser={setUser} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
+              user.isAuth ? <Redirect to="/"/> : <SignIn {...props} user={user} setUser={setUser} setUserCart={setUserCart} guestCart={guestCart} setGuestCart={setGuestCart}/>
             }/>
   
             <Route exact path="/post" render={props => 
