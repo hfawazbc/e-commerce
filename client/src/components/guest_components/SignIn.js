@@ -55,13 +55,13 @@ export default function SignIn({ user, setUser, setUserCart, guestCart, setGuest
             }
         }
 
-        /* if (user.isAuth) { */
+        if (user.isAuth) {
             await fetchCart();
 
             localStorage.clear();
         
             setGuestCart([]);
-        /* } */
+        }
     }
 
     return (
