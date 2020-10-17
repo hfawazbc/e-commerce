@@ -34,7 +34,7 @@ export default function SignIn({ user, setUser, setUserCart, guestCart, setGuest
             }
         }
 
-        await fetchSignIn();
+        fetchSignIn();
 
         const fetchCart = async () => {
             try {
@@ -56,7 +56,7 @@ export default function SignIn({ user, setUser, setUserCart, guestCart, setGuest
         }
 
         if (user.isAuth) {
-            await fetchCart();
+            fetchCart();
 
             localStorage.clear();
         
