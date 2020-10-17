@@ -48,8 +48,6 @@ const main = async () => {
     
     app.use(passport.session());
 
-    /* const upload = require('./config/multer'); */
-
     // ----- ROUTES ----- //
 
     app.get("/", (req, res, next) => { return res.send("Welcome!") });
